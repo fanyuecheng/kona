@@ -1,0 +1,602 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		287B60ADD4A2BE0604B7599F /* libPods-kona.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CC424DA0C3A32C91229390BA /* libPods-kona.a */; };
+		713B3FA5212BB43600151BA0 /* KNPostsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 713B3FA4212BB43600151BA0 /* KNPostsController.m */; };
+		713B3FA8212BBF1C00151BA0 /* KNPostViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 713B3FA7212BBF1C00151BA0 /* KNPostViewModel.m */; };
+		713B3FB1212C130400151BA0 /* KNSettingController.m in Sources */ = {isa = PBXBuildFile; fileRef = 713B3FB0212C130400151BA0 /* KNSettingController.m */; };
+		713B3FB7212C1E2400151BA0 /* KNUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 713B3FB6212C1E2400151BA0 /* KNUtils.m */; };
+		7167094A212AC0C20002E395 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71670948212AC0C20002E395 /* Main.storyboard */; };
+		7167094C212AC0C40002E395 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7167094B212AC0C40002E395 /* Assets.xcassets */; };
+		7167094F212AC0C40002E395 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7167094D212AC0C40002E395 /* LaunchScreen.storyboard */; };
+		71670965212AC4950002E395 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 71670960212AC4950002E395 /* ViewController.m */; };
+		71670966212AC4950002E395 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 71670961212AC4950002E395 /* main.m */; };
+		71670967212AC4950002E395 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 71670962212AC4950002E395 /* AppDelegate.m */; };
+		71670970212ACC490002E395 /* KNViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7167096F212ACC490002E395 /* KNViewController.m */; };
+		71670973212ACC5A0002E395 /* KNTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 71670972212ACC5A0002E395 /* KNTableViewController.m */; };
+		71670976212ACC6B0002E395 /* KNNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 71670975212ACC6B0002E395 /* KNNavigationController.m */; };
+		71670979212ACF7B0002E395 /* KNModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 71670978212ACF7B0002E395 /* KNModel.m */; };
+		7167097C212AD0310002E395 /* KNPost.m in Sources */ = {isa = PBXBuildFile; fileRef = 7167097B212AD0310002E395 /* KNPost.m */; };
+		719E35C821538CA400D84B39 /* QMUIConfigurationTemplateDefault.m in Sources */ = {isa = PBXBuildFile; fileRef = 719E35C721538CA400D84B39 /* QMUIConfigurationTemplateDefault.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		2637563A96F8C4B4435850A0 /* Pods-kona.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kona.debug.xcconfig"; path = "Pods/Target Support Files/Pods-kona/Pods-kona.debug.xcconfig"; sourceTree = "<group>"; };
+		713B3FA3212BB43600151BA0 /* KNPostsController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KNPostsController.h; sourceTree = "<group>"; };
+		713B3FA4212BB43600151BA0 /* KNPostsController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KNPostsController.m; sourceTree = "<group>"; };
+		713B3FA6212BBF1C00151BA0 /* KNPostViewModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KNPostViewModel.h; sourceTree = "<group>"; };
+		713B3FA7212BBF1C00151BA0 /* KNPostViewModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KNPostViewModel.m; sourceTree = "<group>"; };
+		713B3FA9212BC1C200151BA0 /* KNDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KNDefine.h; sourceTree = "<group>"; };
+		713B3FAF212C130400151BA0 /* KNSettingController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KNSettingController.h; sourceTree = "<group>"; };
+		713B3FB0212C130400151BA0 /* KNSettingController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KNSettingController.m; sourceTree = "<group>"; };
+		713B3FB4212C189300151BA0 /* KNClass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KNClass.h; sourceTree = "<group>"; };
+		713B3FB5212C1E2400151BA0 /* KNUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KNUtils.h; sourceTree = "<group>"; };
+		713B3FB6212C1E2400151BA0 /* KNUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KNUtils.m; sourceTree = "<group>"; };
+		7167093F212AC0C20002E395 /* kona.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = kona.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		71670949212AC0C20002E395 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		7167094B212AC0C40002E395 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		7167094E212AC0C40002E395 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		71670950212AC0C40002E395 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7167095F212AC4950002E395 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		71670960212AC4950002E395 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		71670961212AC4950002E395 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		71670962212AC4950002E395 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		71670963212AC4950002E395 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		7167096B212ACB510002E395 /* KNAPI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KNAPI.h; sourceTree = "<group>"; };
+		7167096C212ACBC50002E395 /* KNVendor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KNVendor.h; sourceTree = "<group>"; };
+		7167096D212ACC170002E395 /* KNHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KNHeader.h; sourceTree = "<group>"; };
+		7167096E212ACC490002E395 /* KNViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KNViewController.h; sourceTree = "<group>"; };
+		7167096F212ACC490002E395 /* KNViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KNViewController.m; sourceTree = "<group>"; };
+		71670971212ACC5A0002E395 /* KNTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KNTableViewController.h; sourceTree = "<group>"; };
+		71670972212ACC5A0002E395 /* KNTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KNTableViewController.m; sourceTree = "<group>"; };
+		71670974212ACC6B0002E395 /* KNNavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KNNavigationController.h; sourceTree = "<group>"; };
+		71670975212ACC6B0002E395 /* KNNavigationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KNNavigationController.m; sourceTree = "<group>"; };
+		71670977212ACF7B0002E395 /* KNModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KNModel.h; sourceTree = "<group>"; };
+		71670978212ACF7B0002E395 /* KNModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KNModel.m; sourceTree = "<group>"; };
+		7167097A212AD0310002E395 /* KNPost.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KNPost.h; sourceTree = "<group>"; };
+		7167097B212AD0310002E395 /* KNPost.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KNPost.m; sourceTree = "<group>"; };
+		719E35C621538CA400D84B39 /* QMUIConfigurationTemplateDefault.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMUIConfigurationTemplateDefault.h; sourceTree = "<group>"; };
+		719E35C721538CA400D84B39 /* QMUIConfigurationTemplateDefault.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QMUIConfigurationTemplateDefault.m; sourceTree = "<group>"; };
+		CC424DA0C3A32C91229390BA /* libPods-kona.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-kona.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E694ABBB4C5C527BFE692860 /* Pods-kona.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kona.release.xcconfig"; path = "Pods/Target Support Files/Pods-kona/Pods-kona.release.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		7167093C212AC0C20002E395 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				287B60ADD4A2BE0604B7599F /* libPods-kona.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		713B3FAD212C10A600151BA0 /* Setting */ = {
+			isa = PBXGroup;
+			children = (
+				713B3FAE212C10A600151BA0 /* Controller */,
+			);
+			path = Setting;
+			sourceTree = "<group>";
+		};
+		713B3FAE212C10A600151BA0 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				713B3FAF212C130400151BA0 /* KNSettingController.h */,
+				713B3FB0212C130400151BA0 /* KNSettingController.m */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		71670936212AC0C20002E395 = {
+			isa = PBXGroup;
+			children = (
+				71670941212AC0C20002E395 /* kona */,
+				71670940212AC0C20002E395 /* Products */,
+				D4184A78FB0B87FCEA33F2ED /* Pods */,
+				D5D828781B60AFF00E0D0FDC /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		71670940212AC0C20002E395 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7167093F212AC0C20002E395 /* kona.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		71670941212AC0C20002E395 /* kona */ = {
+			isa = PBXGroup;
+			children = (
+				7167095E212AC4950002E395 /* Application */,
+				71670958212AC4950002E395 /* Common */,
+				7167095D212AC4950002E395 /* Header */,
+				71670964212AC4950002E395 /* Resource */,
+				71670968212ACB340002E395 /* Post */,
+				713B3FAD212C10A600151BA0 /* Setting */,
+				7167094D212AC0C40002E395 /* LaunchScreen.storyboard */,
+				71670948212AC0C20002E395 /* Main.storyboard */,
+				7167094B212AC0C40002E395 /* Assets.xcassets */,
+				71670950212AC0C40002E395 /* Info.plist */,
+			);
+			path = kona;
+			sourceTree = "<group>";
+		};
+		71670958212AC4950002E395 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				71670959212AC4950002E395 /* Controller */,
+				7167095A212AC4950002E395 /* Model */,
+				7167095B212AC4950002E395 /* View */,
+				7167095C212AC4950002E395 /* Class */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		71670959212AC4950002E395 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				7167096E212ACC490002E395 /* KNViewController.h */,
+				7167096F212ACC490002E395 /* KNViewController.m */,
+				71670971212ACC5A0002E395 /* KNTableViewController.h */,
+				71670972212ACC5A0002E395 /* KNTableViewController.m */,
+				71670974212ACC6B0002E395 /* KNNavigationController.h */,
+				71670975212ACC6B0002E395 /* KNNavigationController.m */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		7167095A212AC4950002E395 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				71670977212ACF7B0002E395 /* KNModel.h */,
+				71670978212ACF7B0002E395 /* KNModel.m */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		7167095B212AC4950002E395 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		7167095C212AC4950002E395 /* Class */ = {
+			isa = PBXGroup;
+			children = (
+				713B3FB5212C1E2400151BA0 /* KNUtils.h */,
+				713B3FB6212C1E2400151BA0 /* KNUtils.m */,
+				719E35C621538CA400D84B39 /* QMUIConfigurationTemplateDefault.h */,
+				719E35C721538CA400D84B39 /* QMUIConfigurationTemplateDefault.m */,
+			);
+			path = Class;
+			sourceTree = "<group>";
+		};
+		7167095D212AC4950002E395 /* Header */ = {
+			isa = PBXGroup;
+			children = (
+				7167096B212ACB510002E395 /* KNAPI.h */,
+				7167096C212ACBC50002E395 /* KNVendor.h */,
+				7167096D212ACC170002E395 /* KNHeader.h */,
+				713B3FA9212BC1C200151BA0 /* KNDefine.h */,
+				713B3FB4212C189300151BA0 /* KNClass.h */,
+			);
+			path = Header;
+			sourceTree = "<group>";
+		};
+		7167095E212AC4950002E395 /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				71670961212AC4950002E395 /* main.m */,
+				7167095F212AC4950002E395 /* AppDelegate.h */,
+				71670962212AC4950002E395 /* AppDelegate.m */,
+				71670963212AC4950002E395 /* ViewController.h */,
+				71670960212AC4950002E395 /* ViewController.m */,
+			);
+			path = Application;
+			sourceTree = "<group>";
+		};
+		71670964212AC4950002E395 /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Resource;
+			sourceTree = "<group>";
+		};
+		71670968212ACB340002E395 /* Post */ = {
+			isa = PBXGroup;
+			children = (
+				71670969212ACB340002E395 /* Controller */,
+				7167096A212ACB340002E395 /* Model */,
+			);
+			path = Post;
+			sourceTree = "<group>";
+		};
+		71670969212ACB340002E395 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				713B3FA3212BB43600151BA0 /* KNPostsController.h */,
+				713B3FA4212BB43600151BA0 /* KNPostsController.m */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		7167096A212ACB340002E395 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				7167097A212AD0310002E395 /* KNPost.h */,
+				7167097B212AD0310002E395 /* KNPost.m */,
+				713B3FA6212BBF1C00151BA0 /* KNPostViewModel.h */,
+				713B3FA7212BBF1C00151BA0 /* KNPostViewModel.m */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		D4184A78FB0B87FCEA33F2ED /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				2637563A96F8C4B4435850A0 /* Pods-kona.debug.xcconfig */,
+				E694ABBB4C5C527BFE692860 /* Pods-kona.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		D5D828781B60AFF00E0D0FDC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CC424DA0C3A32C91229390BA /* libPods-kona.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		7167093E212AC0C20002E395 /* kona */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 71670955212AC0C40002E395 /* Build configuration list for PBXNativeTarget "kona" */;
+			buildPhases = (
+				B1FA4EE48EBB87FA354222AA /* [CP] Check Pods Manifest.lock */,
+				7167093B212AC0C20002E395 /* Sources */,
+				7167093C212AC0C20002E395 /* Frameworks */,
+				7167093D212AC0C20002E395 /* Resources */,
+				5C10393D9BEE28D93952C0D4 /* [CP] Embed Pods Frameworks */,
+				A9646A899B79A439D51278AE /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = kona;
+			productName = kona;
+			productReference = 7167093F212AC0C20002E395 /* kona.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		71670937212AC0C20002E395 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = KN;
+				LastUpgradeCheck = 0940;
+				ORGANIZATIONNAME = fancy;
+				TargetAttributes = {
+					7167093E212AC0C20002E395 = {
+						CreatedOnToolsVersion = 9.4.1;
+					};
+				};
+			};
+			buildConfigurationList = 7167093A212AC0C20002E395 /* Build configuration list for PBXProject "kona" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 71670936212AC0C20002E395;
+			productRefGroup = 71670940212AC0C20002E395 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				7167093E212AC0C20002E395 /* kona */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		7167093D212AC0C20002E395 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7167094F212AC0C40002E395 /* LaunchScreen.storyboard in Resources */,
+				7167094C212AC0C40002E395 /* Assets.xcassets in Resources */,
+				7167094A212AC0C20002E395 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5C10393D9BEE28D93952C0D4 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-kona/Pods-kona-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A9646A899B79A439D51278AE /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-kona/Pods-kona-resources.sh",
+				"${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle",
+				"${PODS_ROOT}/QMUIKit/QMUIKit/QMUIResources/QMUIResources.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MJRefresh.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/QMUIResources.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-kona/Pods-kona-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B1FA4EE48EBB87FA354222AA /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-kona-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		7167093B212AC0C20002E395 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				719E35C821538CA400D84B39 /* QMUIConfigurationTemplateDefault.m in Sources */,
+				71670979212ACF7B0002E395 /* KNModel.m in Sources */,
+				71670966212AC4950002E395 /* main.m in Sources */,
+				7167097C212AD0310002E395 /* KNPost.m in Sources */,
+				71670970212ACC490002E395 /* KNViewController.m in Sources */,
+				713B3FA5212BB43600151BA0 /* KNPostsController.m in Sources */,
+				71670965212AC4950002E395 /* ViewController.m in Sources */,
+				713B3FB7212C1E2400151BA0 /* KNUtils.m in Sources */,
+				71670967212AC4950002E395 /* AppDelegate.m in Sources */,
+				713B3FA8212BBF1C00151BA0 /* KNPostViewModel.m in Sources */,
+				71670976212ACC6B0002E395 /* KNNavigationController.m in Sources */,
+				71670973212ACC5A0002E395 /* KNTableViewController.m in Sources */,
+				713B3FB1212C130400151BA0 /* KNSettingController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		71670948212AC0C20002E395 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				71670949212AC0C20002E395 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		7167094D212AC0C40002E395 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7167094E212AC0C40002E395 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		71670953212AC0C40002E395 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		71670954212AC0C40002E395 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		71670956212AC0C40002E395 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2637563A96F8C4B4435850A0 /* Pods-kona.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = kona/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.fancy.kona;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		71670957212AC0C40002E395 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E694ABBB4C5C527BFE692860 /* Pods-kona.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = kona/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.fancy.kona;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		7167093A212AC0C20002E395 /* Build configuration list for PBXProject "kona" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				71670953212AC0C40002E395 /* Debug */,
+				71670954212AC0C40002E395 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		71670955212AC0C40002E395 /* Build configuration list for PBXNativeTarget "kona" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				71670956212AC0C40002E395 /* Debug */,
+				71670957212AC0C40002E395 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 71670937212AC0C20002E395 /* Project object */;
+}
