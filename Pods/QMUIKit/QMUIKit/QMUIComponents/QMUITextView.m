@@ -1,9 +1,16 @@
+/*****
+ * Tencent is pleased to support the open source community by making QMUI_iOS available.
+ * Copyright (C) 2016-2019 THL A29 Limited, a Tencent company. All rights reserved.
+ * Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+ * http://opensource.org/licenses/MIT
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+ *****/
+
 //
 //  QMUITextView.m
 //  qmui
 //
 //  Created by QMUI Team on 14-8-5.
-//  Copyright (c) 2014年 QMUI Team. All rights reserved.
 //
 #import "QMUITextView.h"
 #import "QMUICore.h"
@@ -248,6 +255,10 @@ const UIEdgeInsets kSystemTextViewFixTextInsets = {0, 5, 0, 5};
     
     if (textView) {
         
+        if (!textView.editable) {
+            return;// 不可编辑的 textView 不会显示光标
+        }
+        
         // 计算高度
         if ([textView.delegate respondsToSelector:@selector(textView:newHeightAfterTextChanged:)]) {
             
@@ -287,7 +298,19 @@ const UIEdgeInsets kSystemTextViewFixTextInsets = {0, 5, 0, 5};
         // 如果没走完 didInitialize，说明 self.maximumHeight 尚未被赋初始值 CGFLOAT_MAX，此时的值为 0，就会导致调用 initWithFrame: 时高度无效，必定被指定为 0
         frame = CGRectSetHeight(frame, MIN(CGRectGetHeight(frame), self.maximumHeight));
     }
+    
+    // 重写了 UITextView 的 drawRect: 后，对于带小数点的 frame 会导致文本框右边多出一条黑线，原因未明，暂时这样处理
+    // https://github.com/Tencent/QMUI_iOS/issues/557
+    frame = CGRectFlatted(frame);
+    
     [super setFrame:frame];
+}
+
+- (void)setBounds:(CGRect)bounds {
+    // 重写了 UITextView 的 drawRect: 后，对于带小数点的 frame 会导致文本框右边多出一条黑线，原因未明，暂时这样处理
+    // https://github.com/Tencent/QMUI_iOS/issues/557
+    bounds = CGRectFlatted(bounds);
+    [super setBounds:bounds];
 }
 
 - (void)layoutSubviews {
@@ -385,7 +408,7 @@ const UIEdgeInsets kSystemTextViewFixTextInsets = {0, 5, 0, 5};
         BOOL isDeleting = range.length > 0 && text.length <= 0;
         if (isDeleting) {
             if (NSMaxRange(range) > textView.text.length) {
-                // https://github.com/QMUI/QMUI_iOS/issues/377
+                // https://github.com/Tencent/QMUI_iOS/issues/377
                 return NO;
             } else {
                 return YES;

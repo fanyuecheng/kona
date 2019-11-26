@@ -26,6 +26,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [self showEmptyViewWithLoading];
+    [self.viewModel getRandomPost];
 }
 
 - (void)initSubviews {
@@ -49,7 +52,7 @@
     [super viewDidLayoutSubviews];
     
     CGFloat navigationHeight = self.qmui_navigationBarMaxYInViewCoordinator;
-    CGFloat safeAreaBottom = IPhoneXSafeAreaInsets.bottom;
+    CGFloat safeAreaBottom = SafeAreaInsetsConstantForDeviceWithNotch.bottom;
     
     [self.searchBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.view).offset(navigationHeight);
@@ -73,7 +76,7 @@
         if (viewDidLoad) {
             CGFloat searchBarH = IOS_VERSION < 11.0 ? 44 : 56;
             CGFloat y = self.qmui_navigationBarMaxYInViewCoordinator + searchBarH;
-            CGFloat h = self.view.qmui_height - y - IPhoneXSafeAreaInsets.bottom;
+            CGFloat h = self.view.qmui_height - y - SafeAreaInsetsConstantForDeviceWithNotch.bottom;
             self.emptyView.frame = CGRectMake(0, y, self.view.qmui_width, h);
             return YES;
         }
@@ -112,7 +115,7 @@
 }
 
 - (void)singleTouchInZoomingImageView:(QMUIZoomImageView *)zoomImageView location:(CGPoint)location {
-    [self.previewController exitPreviewByFadeOut];
+    [self.previewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)longPressInZoomingImageView:(QMUIZoomImageView *)zoomImageView {
@@ -144,6 +147,16 @@
 #pragma mark - QMUINavigationTitleViewDelegate
 - (void)didTouchTitleView:(QMUINavigationTitleView *)titleView isActive:(BOOL)isActive {
     [self.menuView showWithAnimated:YES];
+}
+
+#pragma mark - QMUINavigationControllerAppearanceDelegate
+
+- (UIColor *)titleViewTintColor {
+    return UIColorBlue;
+}
+ 
+- (UIColor *)navigationBarTintColor {
+    return UIColorBlue;
 }
 
 #pragma mark - Get
@@ -216,7 +229,7 @@
             self.previewController = [[QMUIImagePreviewViewController alloc] init];
             self.previewController.imagePreviewView.delegate = self;
             self.previewController.imagePreviewView.currentImageIndex = indexPath.item;
-            [self.previewController startPreviewByFadeIn];
+            [self presentViewController:self.previewController animated:YES completion:nil];
         };
     }
     return _viewModel;
@@ -230,53 +243,53 @@
         _menuView.backgroundColor = UIColorWhite;
         _menuView.maximumWidth = 108;
         _menuView.shouldShowItemSeparator = YES;
-        _menuView.separatorInset = UIEdgeInsetsMake(0, 10, 0, 10);
-        _menuView.separatorColor = UIColorSeparator;
+        _menuView.itemSeparatorInset = UIEdgeInsetsMake(0, 10, 0, 10);
+        _menuView.itemSeparatorColor = UIColorSeparator;
         _menuView.cornerRadius = 6;
         _menuView.borderWidth = 0;
         _menuView.preferLayoutDirection = QMUIPopupContainerViewLayoutDirectionBelow;
         
         @weakify(self)
-        QMUIPopupMenuItem *item0 = [self popupMenuItemWithTitle:@"随机" handler:^(QMUIPopupMenuView *aMenuView, QMUIPopupMenuItem *aItem) {
+        QMUIPopupMenuButtonItem *item0 = [self popupMenuItemWithTitle:@"随机" handler:^(QMUIPopupMenuButtonItem *aItem) {
             @strongify(self)
-            [aMenuView hideWithAnimated:YES];
+            [aItem.menuView hideWithAnimated:YES];
             [self showEmptyViewWithLoading];
             [self.viewModel getRandomPost];
         }];
-        QMUIPopupMenuItem *item1 = [self popupMenuItemWithTitle:@"1天" handler:^(QMUIPopupMenuView *aMenuView, QMUIPopupMenuItem *aItem) {
+        QMUIPopupMenuButtonItem *item1 = [self popupMenuItemWithTitle:@"1天" handler:^(QMUIPopupMenuButtonItem *aItem) {
             @strongify(self)
-            [aMenuView hideWithAnimated:YES];
+            [aItem.menuView hideWithAnimated:YES];
             [self showEmptyViewWithLoading];
             [self.viewModel getPopoluarPostWithPeriod:KNPostPopularPeriodDay];
         }];
-        QMUIPopupMenuItem *item2 = [self popupMenuItemWithTitle:@"1周" handler:^(QMUIPopupMenuView *aMenuView, QMUIPopupMenuItem *aItem) {
+        QMUIPopupMenuButtonItem *item2 = [self popupMenuItemWithTitle:@"1周" handler:^(QMUIPopupMenuButtonItem *aItem) {
             @strongify(self)
-            [aMenuView hideWithAnimated:YES];
+            [aItem.menuView hideWithAnimated:YES];
             [self showEmptyViewWithLoading];
             [self.viewModel getPopoluarPostWithPeriod:KNPostPopularPeriodWeek];
         }];
-        QMUIPopupMenuItem *item3 = [self popupMenuItemWithTitle:@"1月" handler:^(QMUIPopupMenuView *aMenuView, QMUIPopupMenuItem *aItem) {
+        QMUIPopupMenuButtonItem *item3 = [self popupMenuItemWithTitle:@"1月" handler:^(QMUIPopupMenuButtonItem *aItem) {
             @strongify(self)
-            [aMenuView hideWithAnimated:YES];
+            [aItem.menuView hideWithAnimated:YES];
             [self showEmptyViewWithLoading];
             [self.viewModel getPopoluarPostWithPeriod:KNPostPopularPeriodMonth];
         }];
-        QMUIPopupMenuItem *item4 = [self popupMenuItemWithTitle:@"1年" handler:^(QMUIPopupMenuView *aMenuView, QMUIPopupMenuItem *aItem) {
+        QMUIPopupMenuButtonItem *item4 = [self popupMenuItemWithTitle:@"1年" handler:^(QMUIPopupMenuButtonItem *aItem) {
             @strongify(self)
-            [aMenuView hideWithAnimated:YES];
+            [aItem.menuView hideWithAnimated:YES];
             [self showEmptyViewWithLoading];
             [self.viewModel getPopoluarPostWithPeriod:KNPostPopularPeriodYear];
         }];
         
         _menuView.items = @[item0, item1, item2, item3, item4];
-        [_menuView layoutWithTargetView:self.titleView];
+        _menuView.sourceView = self.titleView;
     }
     return _menuView;
 }
 
-- (QMUIPopupMenuItem *)popupMenuItemWithTitle:(NSString *)title
-                                      handler:(void (^)(QMUIPopupMenuView *aMenuView, QMUIPopupMenuItem *aItem))handler {
-    QMUIPopupMenuItem *item = [QMUIPopupMenuItem itemWithImage:nil title:title handler:handler];
+- (QMUIPopupMenuButtonItem *)popupMenuItemWithTitle:(NSString *)title
+                                            handler:(void (^)( QMUIPopupMenuButtonItem *aItem))handler {
+    QMUIPopupMenuButtonItem *item = [QMUIPopupMenuButtonItem itemWithImage:nil title:title handler:handler];
     item.button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
     return item;
 }

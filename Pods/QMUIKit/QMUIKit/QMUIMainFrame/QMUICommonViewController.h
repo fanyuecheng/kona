@@ -1,14 +1,23 @@
+/*****
+ * Tencent is pleased to support the open source community by making QMUI_iOS available.
+ * Copyright (C) 2016-2019 THL A29 Limited, a Tencent company. All rights reserved.
+ * Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+ * http://opensource.org/licenses/MIT
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+ *****/
+
 //
 //  QMUICommonViewController.h
 //  qmui
 //
 //  Created by QMUI Team on 14-6-22.
-//  Copyright (c) 2014年 QMUI Team. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 #import "QMUINavigationController.h"
 #import "QMUIKeyboardManager.h"
+
+NS_ASSUME_NONNULL_BEGIN
 
 @class QMUINavigationTitleView;
 @class QMUIEmptyView;
@@ -30,10 +39,12 @@
  *  @see QMUINavigationTitleView
  *  @see QMUIEmptyView
  */
-@interface QMUICommonViewController : UIViewController<QMUINavigationControllerDelegate>
+@interface QMUICommonViewController : UIViewController {
+    QMUIEmptyView *_emptyView;
+}
 
-- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil NS_DESIGNATED_INITIALIZER;
-- (instancetype)initWithCoder:(NSCoder *)aDecoder NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil NS_DESIGNATED_INITIALIZER;
+- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder NS_DESIGNATED_INITIALIZER;
 
 /**
  *  初始化时调用的方法，会在两个 NS_DESIGNATED_INITIALIZER 方法中被调用，所以子类如果需要同时支持两个 NS_DESIGNATED_INITIALIZER 方法，则建议把初始化时要做的事情放到这个方法里。否则仅需重写要支持的那个 NS_DESIGNATED_INITIALIZER 方法即可。
@@ -46,7 +57,7 @@
  *  同时，QMUINavigationTitleView提供了更多的功能，具体可以参考QMUINavigationTitleView的文档。<br/>
  *  @see QMUINavigationTitleView
  */
-@property(nonatomic, strong, readonly) QMUINavigationTitleView *titleView;
+@property(nullable, nonatomic, strong, readonly) QMUINavigationTitleView *titleView;
 
 /**
  *  修改当前界面要支持的横竖屏方向，默认为 SupportedOrientationMask
@@ -54,9 +65,9 @@
 @property(nonatomic, assign) UIInterfaceOrientationMask supportedOrientationMask;
 
 /**
- *  空列表控件，支持显示提示文字、loading、操作按钮
+ *  空列表控件，支持显示提示文字、loading、操作按钮，该属性懒加载
  */
-@property(nonatomic, strong) QMUIEmptyView *emptyView;
+@property(nullable, nonatomic, strong) QMUIEmptyView *emptyView;
 
 /// 当前self.emptyView是否显示
 @property(nonatomic, assign, readonly, getter = isEmptyViewShowing) BOOL emptyViewShowing;
@@ -77,29 +88,29 @@
 /**
  *  显示带text、detailText、button的emptyView
  */
-- (void)showEmptyViewWithText:(NSString *)text
-                   detailText:(NSString *)detailText
-                  buttonTitle:(NSString *)buttonTitle
-                 buttonAction:(SEL)action;
+- (void)showEmptyViewWithText:(nullable NSString *)text
+                   detailText:(nullable NSString *)detailText
+                  buttonTitle:(nullable NSString *)buttonTitle
+                 buttonAction:(nullable SEL)action;
 
 /**
  *  显示带image、text、detailText、button的emptyView
  */
-- (void)showEmptyViewWithImage:(UIImage *)image
-                          text:(NSString *)text
-                    detailText:(NSString *)detailText
-                   buttonTitle:(NSString *)buttonTitle
-                  buttonAction:(SEL)action;
+- (void)showEmptyViewWithImage:(nullable UIImage *)image
+                          text:(nullable NSString *)text
+                    detailText:(nullable NSString *)detailText
+                   buttonTitle:(nullable NSString *)buttonTitle
+                  buttonAction:(nullable SEL)action;
 
 /**
  *  显示带loading、image、text、detailText、button的emptyView
  */
 - (void)showEmptyViewWithLoading:(BOOL)showLoading
-                           image:(UIImage *)image
-                            text:(NSString *)text
-                      detailText:(NSString *)detailText
-                     buttonTitle:(NSString *)buttonTitle
-                    buttonAction:(SEL)action;
+                           image:(nullable UIImage *)image
+                            text:(nullable NSString *)text
+                      detailText:(nullable NSString *)detailText
+                     buttonTitle:(nullable NSString *)buttonTitle
+                    buttonAction:(nullable SEL)action;
 
 /**
  *  隐藏emptyView
@@ -148,6 +159,15 @@
 
 @end
 
+@interface QMUICommonViewController (QMUINavigationController) <QMUINavigationControllerDelegate>
+
+/**
+ 从 QMUINavigationControllerAppearanceDelegate 系列接口获取当前界面希望的导航栏样式并设置到导航栏上
+ */
+- (void)updateNavigationBarAppearance;
+
+@end
+
 /**
  *  为了方便实现“点击空白区域降下键盘”的需求，QMUICommonViewController 内部集成一个 tap 手势对象并添加到 self.view 上，而业务只需要通过重写 -shouldHideKeyboardWhenTouchInView: 方法并根据当前被点击的 view 返回一个 BOOL 来控制键盘的显隐即可。
  *  @note 为了避免不必要的事件拦截，集成的手势 hideKeyboardTapGestureRecognizer：
@@ -158,14 +178,16 @@
 @interface QMUICommonViewController (QMUIKeyboard)
 
 /// 在 viewDidLoad 内初始化，并且 gestureRecognizerShouldBegin: 必定返回 NO。
-@property(nonatomic, strong, readonly) UITapGestureRecognizer *hideKeyboardTapGestureRecognizer;
-@property(nonatomic, strong, readonly) QMUIKeyboardManager *hideKeyboardManager;
+@property(nullable, nonatomic, strong, readonly) UITapGestureRecognizer *hideKeyboardTapGestureRecognizer;
+@property(nullable, nonatomic, strong, readonly) QMUIKeyboardManager *hideKeyboardManager;
 
 /**
  *  当用户点击界面上某个 view 时，如果此时键盘处于升起状态，则可通过重写这个方法并返回一个 YES 来达到“点击空白区域自动降下键盘”的需求。默认返回 NO，也即不处理键盘。
  *  @warning 注意如果被点击的 view 本身消耗了事件（iOS 11 下测试得到这种类型的所有系统的 view 仅有 UIButton 和 UISwitch），则这个方法并不会被触发。
  *  @warning 有可能参数传进去的 view 是某个 subview 的 subview，所以建议用 isDescendantOfView: 来判断是否点到了某个目标 subview
  */
-- (BOOL)shouldHideKeyboardWhenTouchInView:(UIView *)view;
+- (BOOL)shouldHideKeyboardWhenTouchInView:(nullable UIView *)view;
 
 @end
+
+NS_ASSUME_NONNULL_END

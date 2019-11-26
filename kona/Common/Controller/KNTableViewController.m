@@ -19,6 +19,14 @@
     // Do any additional setup after loading the view.
 }
 
+- (void)didInitialize {
+    [super didInitialize];
+    
+    if (@available(iOS 13.0, *)) {
+       self.modalPresentationStyle = UIModalPresentationFullScreen;
+    }
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

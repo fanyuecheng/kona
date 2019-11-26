@@ -1,9 +1,16 @@
+/*****
+ * Tencent is pleased to support the open source community by making QMUI_iOS available.
+ * Copyright (C) 2016-2019 THL A29 Limited, a Tencent company. All rights reserved.
+ * Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+ * http://opensource.org/licenses/MIT
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+ *****/
+
 //
 //  QMUIAlertController.m
 //  qmui
 //
 //  Created by QMUI Team on 15/7/20.
-//  Copyright (c) 2015年 QMUI Team. All rights reserved.
 //
 
 #import "QMUIAlertController.h"
@@ -15,6 +22,7 @@
 #import "NSParagraphStyle+QMUI.h"
 #import "UIImage+QMUI.h"
 #import "CALayer+QMUI.h"
+#import "QMUIKeyboardManager.h"
 
 static NSUInteger alertControllerCount = 0;
 
@@ -66,7 +74,7 @@ static NSUInteger alertControllerCount = 0;
 
 @implementation QMUIAlertAction
 
-+ (instancetype)actionWithTitle:(NSString *)title style:(QMUIAlertActionStyle)style handler:(void (^)(__kindof QMUIAlertController *, QMUIAlertAction *))handler {
++ (nonnull instancetype)actionWithTitle:(nullable NSString *)title style:(QMUIAlertActionStyle)style handler:(void (^)(__kindof QMUIAlertController *, QMUIAlertAction *))handler {
     QMUIAlertAction *alertAction = [[QMUIAlertAction alloc] init];
     alertAction.title = title;
     alertAction.style = style;
@@ -74,7 +82,7 @@ static NSUInteger alertControllerCount = 0;
     return alertAction;
 }
 
-- (instancetype)init {
+- (nonnull instancetype)init {
     self = [super init];
     if (self) {
         _button = [[QMUIButton alloc] init];
@@ -111,7 +119,7 @@ static NSUInteger alertControllerCount = 0;
 }
 
 static QMUIAlertController *alertControllerAppearance;
-+ (instancetype)appearance {
++ (nonnull instancetype)appearance {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         [self resetAppearance];
@@ -133,7 +141,7 @@ static QMUIAlertController *alertControllerAppearance;
         alertControllerAppearance.alertButtonDisabledAttributes = @{NSForegroundColorAttributeName:UIColorMake(129, 129, 129),NSFontAttributeName:UIFontMake(17),NSKernAttributeName:@(0)};
         alertControllerAppearance.alertCancelButtonAttributes = @{NSForegroundColorAttributeName:UIColorBlue,NSFontAttributeName:UIFontBoldMake(17),NSKernAttributeName:@(0)};
         alertControllerAppearance.alertDestructiveButtonAttributes = @{NSForegroundColorAttributeName:UIColorRed,NSFontAttributeName:UIFontMake(17),NSKernAttributeName:@(0)};
-        alertControllerAppearance.alertContentCornerRadius = (IOS_VERSION >= 9.0 ? 13 : 6);
+        alertControllerAppearance.alertContentCornerRadius = 13;
         alertControllerAppearance.alertButtonHeight = 44;
         alertControllerAppearance.alertHeaderBackgroundColor = UIColorMakeWithRGBA(247, 247, 247, 1);
         alertControllerAppearance.alertButtonBackgroundColor = alertControllerAppearance.alertHeaderBackgroundColor;
@@ -154,8 +162,8 @@ static QMUIAlertController *alertControllerAppearance;
         alertControllerAppearance.sheetCancelButtonAttributes = @{NSForegroundColorAttributeName:UIColorBlue,NSFontAttributeName:UIFontBoldMake(20),NSKernAttributeName:@(0)};
         alertControllerAppearance.sheetDestructiveButtonAttributes = @{NSForegroundColorAttributeName:UIColorRed,NSFontAttributeName:UIFontMake(20),NSKernAttributeName:@(0)};
         alertControllerAppearance.sheetCancelButtonMarginTop = 8;
-        alertControllerAppearance.sheetContentCornerRadius = (IOS_VERSION >= 9.0 ? 13 : 6);
-        alertControllerAppearance.sheetButtonHeight = (IOS_VERSION >= 9.0 ? 57 : 44);
+        alertControllerAppearance.sheetContentCornerRadius = 13;
+        alertControllerAppearance.sheetButtonHeight = 57;
         alertControllerAppearance.sheetHeaderBackgroundColor = UIColorMakeWithRGBA(247, 247, 247, 1);
         alertControllerAppearance.sheetButtonBackgroundColor = alertControllerAppearance.sheetHeaderBackgroundColor;
         alertControllerAppearance.sheetButtonHighlightBackgroundColor = UIColorMake(232, 232, 232);
@@ -271,6 +279,7 @@ static QMUIAlertController *alertControllerAppearance;
     }
     
     self.shouldManageTextFieldsReturnEventAutomatically = YES;
+    self.dismissKeyboardAutomatically = YES;
 }
 
 - (void)setAlertButtonAttributes:(NSDictionary<NSString *,id> *)alertButtonAttributes {
@@ -501,7 +510,7 @@ static QMUIAlertController *alertControllerAppearance;
     }
 }
 
-+ (instancetype)alertControllerWithTitle:(NSString *)title message:(NSString *)message preferredStyle:(QMUIAlertControllerStyle)preferredStyle {
++ (nonnull instancetype)alertControllerWithTitle:(nullable NSString *)title message:(nullable NSString *)message preferredStyle:(QMUIAlertControllerStyle)preferredStyle {
     QMUIAlertController *alertController = [[self alloc] initWithTitle:title message:message preferredStyle:preferredStyle];
     if (alertController) {
         return alertController;
@@ -509,7 +518,7 @@ static QMUIAlertController *alertControllerAppearance;
     return nil;
 }
 
-- (instancetype)initWithTitle:(NSString *)title message:(NSString *)message preferredStyle:(QMUIAlertControllerStyle)preferredStyle {
+- (nonnull instancetype)initWithTitle:(nullable NSString *)title message:(nullable NSString *)message preferredStyle:(QMUIAlertControllerStyle)preferredStyle {
     self = [self init];
     if (self) {
         
@@ -554,8 +563,8 @@ static QMUIAlertController *alertControllerAppearance;
     return self;
 }
 
-- (void)setPreferredStyle:(QMUIAlertControllerStyle)preferredStyle {
-    _preferredStyle = IS_IPAD ? QMUIAlertControllerStyleAlert : preferredStyle;
+- (QMUIAlertControllerStyle)preferredStyle {
+    return PreferredValueForDeviceIncludingiPad(1, 0, 0, 0, 0) > 0 ? QMUIAlertControllerStyleAlert : _preferredStyle;
 }
 
 - (void)viewDidLoad {
@@ -777,10 +786,10 @@ static QMUIAlertController *alertControllerAppearance;
             contentHeight -= self.sheetContentMargin.top;
         }
         
-        CGRect containerRect = CGRectMake((CGRectGetWidth(self.view.bounds) - CGRectGetWidth(self.containerView.bounds)) / 2, screenSpaceHeight - contentHeight - IPhoneXSafeAreaInsets.bottom, CGRectGetWidth(self.containerView.bounds), contentHeight + (self.isExtendBottomLayout ? IPhoneXSafeAreaInsets.bottom : 0));
+        CGRect containerRect = CGRectMake((CGRectGetWidth(self.view.bounds) - CGRectGetWidth(self.containerView.bounds)) / 2, screenSpaceHeight - contentHeight - SafeAreaInsetsConstantForDeviceWithNotch.bottom, CGRectGetWidth(self.containerView.bounds), contentHeight + (self.isExtendBottomLayout ? SafeAreaInsetsConstantForDeviceWithNotch.bottom : 0));
         self.containerView.frame = CGRectFlatted(CGRectApplyAffineTransform(containerRect, self.containerView.transform));
         
-        self.extendLayer.frame = CGRectFlatMake(0, CGRectGetHeight(self.containerView.bounds) - IPhoneXSafeAreaInsets.bottom - 1, CGRectGetWidth(self.containerView.bounds), IPhoneXSafeAreaInsets.bottom + 1);
+        self.extendLayer.frame = CGRectFlatMake(0, CGRectGetHeight(self.containerView.bounds) - SafeAreaInsetsConstantForDeviceWithNotch.bottom - 1, CGRectGetWidth(self.containerView.bounds), SafeAreaInsetsConstantForDeviceWithNotch.bottom + 1);
     }
 }
 
@@ -843,7 +852,7 @@ static QMUIAlertController *alertControllerAppearance;
                 }
             }];
         } else if (self.preferredStyle == QMUIAlertControllerStyleActionSheet) {
-            weakSelf.containerView.layer.transform = CATransform3DMakeTranslation(0, CGRectGetHeight(weakSelf.containerView.bounds), 0);
+            weakSelf.containerView.layer.transform = CATransform3DMakeTranslation(0, CGRectGetHeight(weakSelf.view.bounds) - CGRectGetMinY(weakSelf.containerView.frame), 0);
             [UIView animateWithDuration:0.25f delay:0 options:QMUIViewAnimationOptionsCurveOut animations:^{
                 weakSelf.maskView.alpha = 1;
                 weakSelf.containerView.layer.transform = CATransform3DIdentity;
@@ -869,7 +878,7 @@ static QMUIAlertController *alertControllerAppearance;
         } else if (self.preferredStyle == QMUIAlertControllerStyleActionSheet) {
             [UIView animateWithDuration:0.25f delay:0 options:QMUIViewAnimationOptionsCurveOut animations:^{
                 weakSelf.maskView.alpha = 0;
-                weakSelf.containerView.layer.transform = CATransform3DMakeTranslation(0, CGRectGetHeight(weakSelf.containerView.bounds), 0);
+                weakSelf.containerView.layer.transform = CATransform3DMakeTranslation(0, CGRectGetHeight(weakSelf.view.bounds) - CGRectGetMinY(weakSelf.containerView.frame), 0);
             } completion:^(BOOL finished) {
                 if (completion) {
                     completion(finished);
@@ -887,6 +896,14 @@ static QMUIAlertController *alertControllerAppearance;
     
     if (self.alertTextFields.count > 0) {
         [self.alertTextFields.firstObject becomeFirstResponder];
+    } else {
+        // iOS 10 及以上的版本在显示 window 时都会自动降下当前 App 的键盘，所以只有 iOS 9 及以下才需要手动处理
+        if (@available(iOS 10.0, *)) {
+        } else {
+            if (self.dismissKeyboardAutomatically && [QMUIKeyboardManager isKeyboardVisible]) {
+                [UIApplication.sharedApplication sendAction:@selector(resignFirstResponder) to:nil from:nil forEvent:nil];
+            }
+        }
     }
     if (_needsUpdateAction) {
         [self updateAction];
@@ -910,10 +927,10 @@ static QMUIAlertController *alertControllerAppearance;
         weakSelf.maskView.alpha = 1;
         weakSelf.willShow = NO;
         weakSelf.showing = YES;
-        if (self.isNeedsHideAfterAlertShowed) {
-            [self hideWithAnimated:self.isAnimatedForHideAfterAlertShowed];
-            self.isNeedsHideAfterAlertShowed = NO;
-            self.isAnimatedForHideAfterAlertShowed = NO;
+        if (weakSelf.isNeedsHideAfterAlertShowed) {
+            [weakSelf hideWithAnimated:weakSelf.isAnimatedForHideAfterAlertShowed];
+            weakSelf.isNeedsHideAfterAlertShowed = NO;
+            weakSelf.isAnimatedForHideAfterAlertShowed = NO;
         }
         if ([weakSelf.delegate respondsToSelector:@selector(didShowAlertController:)]) {
             [weakSelf.delegate didShowAlertController:weakSelf];
@@ -955,21 +972,19 @@ static QMUIAlertController *alertControllerAppearance;
         if (self.preferredStyle == QMUIAlertControllerStyleAlert) {
             weakSelf.containerView.alpha = 0;
         } else {
-            weakSelf.containerView.layer.transform = CATransform3DMakeTranslation(0, CGRectGetHeight(weakSelf.containerView.bounds), 0);
+            weakSelf.containerView.layer.transform = CATransform3DMakeTranslation(0, CGRectGetHeight(weakSelf.view.bounds) - CGRectGetMinY(weakSelf.containerView.frame), 0);
         }
         if ([weakSelf.delegate respondsToSelector:@selector(didHideAlertController:)]) {
             [weakSelf.delegate didHideAlertController:weakSelf];
         }
-        if (completion) {
-            completion();
-        }
+        if (completion) completion();
     }];
     
     // 减少alertController计数
     alertControllerCount--;
 }
 
-- (void)addAction:(QMUIAlertAction *)action {
+- (void)addAction:(nonnull QMUIAlertAction *)action {
     if (action.style == QMUIAlertActionStyleCancel && self.cancelAction) {
         [NSException raise:@"QMUIAlertController使用错误" format:@"同一个alertController不可以同时添加两个cancel按钮"];
     }
@@ -1027,11 +1042,16 @@ static QMUIAlertController *alertControllerAppearance;
 }
 
 - (void)addCustomView:(UIView *)view {
-    if (self.alertTextFields.count > 0) {
-        [NSException raise:@"QMUIAlertController使用错误" format:@"UITextField和CustomView不能共存"];
+    if (view && self.alertTextFields.count > 0) {
+        [NSException raise:@"QMUIAlertController使用错误" format:@"UITextField 和 customView 不能共存"];
+    }
+    if (_customView && _customView != view) {
+        [_customView removeFromSuperview];
     }
     _customView = view;
-    [self.headerScrollView addSubview:_customView];
+    if (_customView) {
+        [self.headerScrollView addSubview:_customView];
+    }
 }
 
 - (void)setTitle:(NSString *)title {
@@ -1162,7 +1182,6 @@ static QMUIAlertController *alertControllerAppearance;
     [self hideWithAnimated:YES completion:^{
         if (alertAction.handler) {
             alertAction.handler(self, alertAction);
-            alertAction.handler = nil;
         }
     }];
 }

@@ -1,9 +1,16 @@
+/*****
+ * Tencent is pleased to support the open source community by making QMUI_iOS available.
+ * Copyright (C) 2016-2019 THL A29 Limited, a Tencent company. All rights reserved.
+ * Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+ * http://opensource.org/licenses/MIT
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+ *****/
+
 //
 //  CAAnimation+QMUI.m
 //  QMUIKit
 //
-//  Created by MoLice on 2018/7/31.
-//  Copyright © 2018年 QMUI Team. All rights reserved.
+//  Created by QMUI Team on 2018/7/31.
 //
 
 #import "CAAnimation+QMUI.h"
@@ -19,16 +26,14 @@
 + (void)load {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        ExchangeImplementations(self.class, @selector(copyWithZone:), @selector(qmui_copyWithZone:));
+        ExtendImplementationOfNonVoidMethodWithSingleArgument([CAAnimation class], @selector(copyWithZone:), NSZone *, id, ^id(CAAnimation *selfObject, NSZone *firstArgv, id originReturnValue) {
+            CAAnimation *animation = (CAAnimation *)originReturnValue;
+            animation.qmui_multipleDelegatesEnabled = selfObject.qmui_multipleDelegatesEnabled;
+            animation.qmui_animationDidStartBlock = selfObject.qmui_animationDidStartBlock;
+            animation.qmui_animationDidStopBlock = selfObject.qmui_animationDidStopBlock;
+            return animation;
+        });
     });
-}
-
-- (id)qmui_copyWithZone:(NSZone *)zone {
-    CAAnimation *animation = [self qmui_copyWithZone:zone];
-    animation.qmui_multipleDelegatesEnabled = self.qmui_multipleDelegatesEnabled;
-    animation.qmui_animationDidStartBlock = self.qmui_animationDidStartBlock;
-    animation.qmui_animationDidStopBlock = self.qmui_animationDidStopBlock;
-    return animation;
 }
 
 - (void)enabledDelegateBlocks {

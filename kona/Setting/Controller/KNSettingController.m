@@ -50,7 +50,7 @@
         QMUITips *loading = [QMUITips showLoadingInView:self.view];
         [[SDImageCache sharedImageCache] clearDiskOnCompletion:^{
             [loading hideAnimated:YES];
-            data.detailText = [NSByteCountFormatter stringFromByteCount:[[SDImageCache sharedImageCache] getSize] countStyle:NSByteCountFormatterCountStyleFile];
+            data.detailText = [NSByteCountFormatter stringFromByteCount:[[SDImageCache sharedImageCache] totalDiskSize] countStyle:NSByteCountFormatterCountStyleFile];
             [self.tableView reloadRowsAtIndexPaths:@[data.indexPath] withRowAnimation:UITableViewRowAnimationFade];
         }];
     }];
@@ -65,6 +65,16 @@
     [self.tableView deselectRowAtIndexPath:data.indexPath animated:YES];
 }
 
+#pragma mark - QMUINavigationControllerAppearanceDelegate
+
+- (UIColor *)titleViewTintColor {
+    return UIColorBlue;
+}
+ 
+- (UIColor *)navigationBarTintColor {
+    return UIColorBlue;
+}
+
 #pragma mark - Get
 - (QMUIStaticTableViewCellDataSource *)dataSource {
     if (!_dataSource) {
@@ -73,8 +83,8 @@
         data0.accessoryTarget = self;
         data0.accessoryAction = @selector(switchAction:);
         
-        NSString *fileSize = [NSByteCountFormatter stringFromByteCount:[[SDImageCache sharedImageCache] getSize] countStyle:NSByteCountFormatterCountStyleFile];
-        NSString *detailText = [NSString stringWithFormat:@"%lu个 %@", [[SDImageCache sharedImageCache] getDiskCount], fileSize];
+        NSString *fileSize = [NSByteCountFormatter stringFromByteCount:[[SDImageCache sharedImageCache] totalDiskSize] countStyle:NSByteCountFormatterCountStyleFile];
+        NSString *detailText = [NSString stringWithFormat:@"%lu个 %@", [[SDImageCache sharedImageCache] totalDiskCount], fileSize];
         
         QMUIStaticTableViewCellData *data1 = [QMUIStaticTableViewCellData staticTableViewCellDataWithIdentifier:1 image:nil text:@"清除缓存" detailText:detailText didSelectTarget:self didSelectAction:@selector(clearAction:) accessoryType:QMUIStaticTableViewCellAccessoryTypeNone];
         data1.style = UITableViewCellStyleValue1;

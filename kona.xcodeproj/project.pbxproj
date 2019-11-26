@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -23,7 +23,6 @@
 		71670976212ACC6B0002E395 /* KNNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 71670975212ACC6B0002E395 /* KNNavigationController.m */; };
 		71670979212ACF7B0002E395 /* KNModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 71670978212ACF7B0002E395 /* KNModel.m */; };
 		7167097C212AD0310002E395 /* KNPost.m in Sources */ = {isa = PBXBuildFile; fileRef = 7167097B212AD0310002E395 /* KNPost.m */; };
-		719E35C821538CA400D84B39 /* QMUIConfigurationTemplateDefault.m in Sources */ = {isa = PBXBuildFile; fileRef = 719E35C721538CA400D84B39 /* QMUIConfigurationTemplateDefault.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -61,8 +60,6 @@
 		71670978212ACF7B0002E395 /* KNModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KNModel.m; sourceTree = "<group>"; };
 		7167097A212AD0310002E395 /* KNPost.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KNPost.h; sourceTree = "<group>"; };
 		7167097B212AD0310002E395 /* KNPost.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KNPost.m; sourceTree = "<group>"; };
-		719E35C621538CA400D84B39 /* QMUIConfigurationTemplateDefault.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMUIConfigurationTemplateDefault.h; sourceTree = "<group>"; };
-		719E35C721538CA400D84B39 /* QMUIConfigurationTemplateDefault.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QMUIConfigurationTemplateDefault.m; sourceTree = "<group>"; };
 		CC424DA0C3A32C91229390BA /* libPods-kona.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-kona.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E694ABBB4C5C527BFE692860 /* Pods-kona.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kona.release.xcconfig"; path = "Pods/Target Support Files/Pods-kona/Pods-kona.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -176,8 +173,6 @@
 			children = (
 				713B3FB5212C1E2400151BA0 /* KNUtils.h */,
 				713B3FB6212C1E2400151BA0 /* KNUtils.m */,
-				719E35C621538CA400D84B39 /* QMUIConfigurationTemplateDefault.h */,
-				719E35C721538CA400D84B39 /* QMUIConfigurationTemplateDefault.m */,
 			);
 			path = Class;
 			sourceTree = "<group>";
@@ -270,7 +265,6 @@
 				7167093B212AC0C20002E395 /* Sources */,
 				7167093C212AC0C20002E395 /* Frameworks */,
 				7167093D212AC0C20002E395 /* Resources */,
-				5C10393D9BEE28D93952C0D4 /* [CP] Embed Pods Frameworks */,
 				A9646A899B79A439D51278AE /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
@@ -329,39 +323,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		5C10393D9BEE28D93952C0D4 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-kona/Pods-kona-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		A9646A899B79A439D51278AE /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-kona/Pods-kona-resources.sh",
-				"${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle",
-				"${PODS_ROOT}/QMUIKit/QMUIKit/QMUIResources/QMUIResources.bundle",
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-kona/Pods-kona-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MJRefresh.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/QMUIResources.bundle",
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-kona/Pods-kona-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-kona/Pods-kona-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-kona/Pods-kona-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		B1FA4EE48EBB87FA354222AA /* [CP] Check Pods Manifest.lock */ = {
@@ -389,7 +365,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				719E35C821538CA400D84B39 /* QMUIConfigurationTemplateDefault.m in Sources */,
 				71670979212ACF7B0002E395 /* KNModel.m in Sources */,
 				71670966212AC4950002E395 /* main.m in Sources */,
 				7167097C212AD0310002E395 /* KNPost.m in Sources */,

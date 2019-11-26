@@ -1,9 +1,16 @@
-;//
+/*****
+ * Tencent is pleased to support the open source community by making QMUI_iOS available.
+ * Copyright (C) 2016-2019 THL A29 Limited, a Tencent company. All rights reserved.
+ * Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+ * http://opensource.org/licenses/MIT
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+ *****/
+
+//
 //  QMUIDialogViewController.m
 //  WeRead
 //
-//  Created by MoLice on 16/7/8.
-//  Copyright © 2016年 QMUI Team. All rights reserved.
+//  Created by QMUI Team on 16/7/8.
 //
 
 #import "QMUIDialogViewController.h"
@@ -28,7 +35,7 @@
 }
 
 static QMUIDialogViewController *dialogViewControllerAppearance;
-+ (instancetype)appearance {
++ (nonnull instancetype)appearance {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         if (!dialogViewControllerAppearance) {
@@ -37,7 +44,7 @@ static QMUIDialogViewController *dialogViewControllerAppearance;
             dialogViewControllerAppearance.dialogViewMargins = UIEdgeInsetsMake(20, 20, 20, 20); // 在 -didInitialize 里会适配 iPhone X 的 safeAreaInsets
             dialogViewControllerAppearance.maximumContentViewWidth = [QMUIHelper screenSizeFor55Inch].width - UIEdgeInsetsGetHorizontalValue(dialogViewControllerAppearance.dialogViewMargins);
             dialogViewControllerAppearance.backgroundColor = UIColorWhite;
-            dialogViewControllerAppearance.titleTintColor = UIColorBlack;
+            dialogViewControllerAppearance.titleTintColor = nil;
             dialogViewControllerAppearance.titleLabelFont = UIFontMake(16);
             dialogViewControllerAppearance.titleLabelTextColor = UIColorMake(53, 60, 70);
             dialogViewControllerAppearance.subTitleLabelFont = UIFontMake(12);
@@ -75,7 +82,7 @@ static QMUIDialogViewController *dialogViewControllerAppearance;
     [super didInitialize];
     if (dialogViewControllerAppearance) {
         self.cornerRadius = [QMUIDialogViewController appearance].cornerRadius;
-        self.dialogViewMargins = UIEdgeInsetsConcat([QMUIDialogViewController appearance].dialogViewMargins, IPhoneXSafeAreaInsets);
+        self.dialogViewMargins = UIEdgeInsetsConcat([QMUIDialogViewController appearance].dialogViewMargins, SafeAreaInsetsConstantForDeviceWithNotch);
         self.maximumContentViewWidth = [QMUIDialogViewController appearance].maximumContentViewWidth;
         self.backgroundColor = [QMUIDialogViewController appearance].backgroundColor;
         self.titleTintColor = [QMUIDialogViewController appearance].titleTintColor;
@@ -130,10 +137,6 @@ static QMUIDialogViewController *dialogViewControllerAppearance;
     self.modalPresentationViewController.modal = YES;
 }
 
-- (void)dealloc {
-    NSLog(@"");
-}
-
 - (void)setCornerRadius:(CGFloat)cornerRadius {
     _cornerRadius = cornerRadius;
     if ([self isViewLoaded]) {
@@ -150,7 +153,7 @@ static QMUIDialogViewController *dialogViewControllerAppearance;
 
 - (void)setTitleTintColor:(UIColor *)titleTintColor {
     _titleTintColor = titleTintColor;
-    self.titleView.tintColor = titleTintColor;
+    [self updateTitleViewColor];
 }
 
 - (void)setTitleLabelFont:(UIFont *)titleLabelFont {
@@ -161,7 +164,7 @@ static QMUIDialogViewController *dialogViewControllerAppearance;
 
 - (void)setTitleLabelTextColor:(UIColor *)titleLabelTextColor {
     _titleLabelTextColor = titleLabelTextColor;
-    self.titleView.titleLabel.textColor = titleLabelTextColor;
+    [self updateTitleViewColor];
 }
 
 - (void)setSubTitleLabelFont:(UIFont *)subTitleLabelFont {
@@ -172,7 +175,17 @@ static QMUIDialogViewController *dialogViewControllerAppearance;
 
 - (void)setSubTitleLabelTextColor:(UIColor *)subTitleLabelTextColor {
     _subTitleLabelTextColor = subTitleLabelTextColor;
-    self.titleView.subtitleLabel.textColor = subTitleLabelTextColor;
+    [self updateTitleViewColor];
+}
+
+- (void)updateTitleViewColor {
+    self.titleView.adjustsSubviewsTintColorAutomatically = !self.titleLabelTextColor && !self.subTitleLabelTextColor;
+    if (self.titleView.adjustsSubviewsTintColorAutomatically) {
+        self.titleView.tintColor = self.titleTintColor;// call tintColorDidChange
+    } else {
+        self.titleView.titleLabel.textColor = self.titleLabelTextColor ?: (self.titleTintColor ?: self.titleView.tintColor);
+        self.titleView.subtitleLabel.textColor = self.subTitleLabelTextColor ?: (self.titleTintColor ?: self.titleView.tintColor);
+    }
 }
 
 - (void)setHeaderSeparatorColor:(UIColor *)headerSeparatorColor {
@@ -361,7 +374,6 @@ EndIgnoreClangWarning
 - (QMUIButton *)generateButtonWithText:(NSString *)buttonText {
     QMUIButton *button = [[QMUIButton alloc] init];
     button.titleLabel.font = UIFontBoldMake((IS_320WIDTH_SCREEN) ? 14 : 15);
-    button.adjustsTitleTintColorAutomatically = YES;
     button.backgroundColor = self.buttonBackgroundColor;
     button.highlightedBackgroundColor = self.buttonHighlightedBackgroundColor;
     [button setAttributedTitle:[[NSAttributedString alloc] initWithString:buttonText attributes:self.buttonTitleAttributes] forState:UIControlStateNormal];
@@ -443,7 +455,7 @@ EndIgnoreClangWarning
 }
 
 static QMUIDialogSelectionViewController *dialogSelectionViewControllerAppearance;
-+ (instancetype)appearance {
++ (nonnull instancetype)appearance {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         if (!dialogSelectionViewControllerAppearance) {
@@ -516,13 +528,13 @@ const NSInteger QMUIDialogSelectionViewControllerSelectedItemIndexNone = -1;
 }
 
 - (void)setSelectedItemIndex:(NSInteger)selectedItemIndex {
-    _selectedItemIndex = selectedItemIndex;
     [self.selectedItemIndexes removeAllObjects];
+    _selectedItemIndex = selectedItemIndex;
 }
 
 - (void)setSelectedItemIndexes:(NSMutableSet<NSNumber *> *)selectedItemIndexes {
-    _selectedItemIndexes = selectedItemIndexes;
     self.selectedItemIndex = QMUIDialogSelectionViewControllerSelectedItemIndexNone;
+    _selectedItemIndexes = selectedItemIndexes;
 }
 
 - (void)setAllowsMultipleSelection:(BOOL)allowsMultipleSelection {
@@ -651,7 +663,7 @@ const NSInteger QMUIDialogSelectionViewControllerSelectedItemIndexNone = -1;
 }
 
 static QMUIDialogTextFieldViewController *dialogTextFieldViewControllerAppearance;
-+ (instancetype)appearance {
++ (nonnull instancetype)appearance {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         if (!dialogTextFieldViewControllerAppearance) {
@@ -890,7 +902,7 @@ static QMUIDialogTextFieldViewController *dialogTextFieldViewControllerAppearanc
 }
 
 - (NSArray<QMUILabel *> *)textFieldTitleLabels {
-    return self.mutableTextFields.copy;
+    return self.mutableTitleLabels.copy;
 }
 
 - (NSArray<QMUITextField *> *)textFields {

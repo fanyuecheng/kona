@@ -1,55 +1,60 @@
+/*****
+ * Tencent is pleased to support the open source community by making QMUI_iOS available.
+ * Copyright (C) 2016-2019 THL A29 Limited, a Tencent company. All rights reserved.
+ * Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+ * http://opensource.org/licenses/MIT
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+ *****/
+
 //
 //  NSString+QMUI.h
 //  qmui
 //
-//  Created by ZhoonChen on 15/7/20.
-//  Copyright (c) 2015年 QMUI Team. All rights reserved.
+//  Created by QMUI Team on 15/7/20.
 //
 
 #import <Foundation/Foundation.h>
 #import <CoreGraphics/CGBase.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface NSString (QMUI)
 
 /// 将字符串按一个一个字符拆成数组，类似 JavaScript 里的 split("")，如果多个空格，则每个空格也会当成一个 item
-- (NSArray<NSString *> *)qmui_toArray;
+@property(nullable, readonly, copy) NSArray<NSString *> *qmui_toArray;
 
 /// 将字符串按一个一个字符拆成数组，类似 JavaScript 里的 split("")，但会自动过滤掉空白字符
-- (NSArray<NSString *> *)qmui_toTrimmedArray;
+@property(nullable, readonly, copy) NSArray<NSString *> *qmui_toTrimmedArray;
 
 /// 去掉头尾的空白字符
-- (NSString *)qmui_trim;
+@property(readonly, copy) NSString *qmui_trim;
 
 /// 去掉整段文字内的所有空白字符（包括换行符）
-- (NSString *)qmui_trimAllWhiteSpace;
+@property(readonly, copy) NSString *qmui_trimAllWhiteSpace;
 
 /// 将文字中的换行符替换为空格
-- (NSString *)qmui_trimLineBreakCharacter;
+@property(readonly, copy) NSString *qmui_trimLineBreakCharacter;
 
 /// 把该字符串转换为对应的 md5
-- (NSString *)qmui_md5;
+@property(readonly, copy) NSString *qmui_md5;
 
-/// 把某个十进制数字转换成十六进制的数字的字符串，例如“10”->“A”
-+ (NSString *)qmui_hexStringWithInteger:(NSInteger)integer;
+/// 返回一个符合 query value 要求的编码后的字符串，例如&、#、=等字符均会被变为 %xxx 的编码
+/// @see `NSCharacterSet (QMUI) qmui_URLUserInputQueryAllowedCharacterSet`
+@property(nullable, readonly, copy) NSString *qmui_stringByEncodingUserInputQuery;
 
-/// 把参数列表拼接成一个字符串并返回，相当于用另一种语法来代替 [NSString stringWithFormat:]
-+ (NSString *)qmui_stringByConcat:(id)firstArgv, ...;
-
-/**
- * 将秒数转换为同时包含分钟和秒数的格式的字符串，例如 100->"01:40"
- */
-+ (NSString *)qmui_timeStringWithMinsAndSecsFromSecs:(double)seconds;
+/// 把当前文本的第一个字符改为大写，其他的字符保持不变，例如 backgroundView.qmui_capitalizedString -> BackgroundView（系统的 capitalizedString 会变成 Backgroundview）
+@property(nullable, readonly, copy) NSString *qmui_capitalizedString;
 
 /**
  * 用正则表达式匹配的方式去除字符串里一些特殊字符，避免UI上的展示问题
  * @link http://www.croton.su/en/uniblock/Diacriticals.html @/link
  */
-- (NSString *)qmui_removeMagicalChar;
+@property(nullable, readonly, copy) NSString *qmui_removeMagicalChar;
 
 /**
  *  按照中文 2 个字符、英文 1 个字符的方式来计算文本长度
  */
-- (NSUInteger)qmui_lengthWhenCountingNonASCIICharacterAsTwo;
+@property(readonly) NSUInteger qmui_lengthWhenCountingNonASCIICharacterAsTwo;
 
 /**
  *  将字符串从指定的 index 开始裁剪到结尾，裁剪时会避免将 emoji 等 "character sequences" 拆散（一个 emoji 表情占用1-4个长度的字符）。
@@ -121,12 +126,31 @@
 - (NSString *)qmui_stringByRemoveLastCharacter;
 
 /**
- *  用正则表达式匹配字符串并将其替换为指定的另一个字符串
+ 用正则表达式匹配字符串，将匹配到的第一个结果返回，大小写不敏感
+
+ @param pattern 正则表达式
+ @return 匹配到的第一个结果，如果没有匹配成功则返回 nil
+ */
+- (NSString *)qmui_stringMatchedByPattern:(NSString *)pattern;
+
+/**
+ *  用正则表达式匹配字符串并将其替换为指定的另一个字符串，大小写不敏感
  *  @param pattern 正则表达式
  *  @param replacement 要替换为的字符串
  *  @return 最终替换后的完整字符串，如果正则表达式匹配不成功则返回原字符串
  */
 - (NSString *)qmui_stringByReplacingPattern:(NSString *)pattern withString:(NSString *)replacement;
+
+/// 把某个十进制数字转换成十六进制的数字的字符串，例如“10”->“A”
++ (NSString *)qmui_hexStringWithInteger:(NSInteger)integer;
+
+/// 把参数列表拼接成一个字符串并返回，相当于用另一种语法来代替 [NSString stringWithFormat:]
++ (NSString *)qmui_stringByConcat:(id)firstArgv, ...;
+
+/**
+ * 将秒数转换为同时包含分钟和秒数的格式的字符串，例如 100->"01:40"
+ */
++ (NSString *)qmui_timeStringWithMinsAndSecsFromSecs:(double)seconds;
 
 @end
 
@@ -136,3 +160,5 @@
 + (instancetype)qmui_stringWithCGFloat:(CGFloat)floatValue;
 + (instancetype)qmui_stringWithCGFloat:(CGFloat)floatValue decimal:(NSUInteger)decimal;
 @end
+
+NS_ASSUME_NONNULL_END

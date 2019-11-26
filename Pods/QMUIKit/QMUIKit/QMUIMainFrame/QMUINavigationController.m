@@ -1,9 +1,16 @@
+/*****
+ * Tencent is pleased to support the open source community by making QMUI_iOS available.
+ * Copyright (C) 2016-2019 THL A29 Limited, a Tencent company. All rights reserved.
+ * Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+ * http://opensource.org/licenses/MIT
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+ *****/
+
 //
 //  QMUINavigationController.m
 //  qmui
 //
 //  Created by QMUI Team on 14-6-24.
-//  Copyright (c) 2014年 QMUI Team. All rights reserved.
 //
 
 #import "QMUINavigationController.h"
@@ -16,97 +23,9 @@
 #import "QMUIMultipleDelegates.h"
 #import "QMUIWeakObjectContainer.h"
 
-@implementation UIViewController (QMUINavigationController)
-
-- (BOOL)qmui_navigationControllerPoppingInteracted {
-    return self.qmui_poppingByInteractivePopGestureRecognizer || self.qmui_willAppearByInteractivePopGestureRecognizer;
-}
-
-static char kAssociatedObjectKey_navigationControllerPopGestureRecognizerChanging;
-- (void)setQmui_navigationControllerPopGestureRecognizerChanging:(BOOL)qmui_navigationControllerPopGestureRecognizerChanging {
-    objc_setAssociatedObject(self, &kAssociatedObjectKey_navigationControllerPopGestureRecognizerChanging, @(qmui_navigationControllerPopGestureRecognizerChanging), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (BOOL)qmui_navigationControllerPopGestureRecognizerChanging {
-    return [((NSNumber *)objc_getAssociatedObject(self, &kAssociatedObjectKey_navigationControllerPopGestureRecognizerChanging)) boolValue];
-}
-
-static char kAssociatedObjectKey_poppingByInteractivePopGestureRecognizer;
-- (void)setQmui_poppingByInteractivePopGestureRecognizer:(BOOL)qmui_poppingByInteractivePopGestureRecognizer {
-    objc_setAssociatedObject(self, &kAssociatedObjectKey_poppingByInteractivePopGestureRecognizer, @(qmui_poppingByInteractivePopGestureRecognizer), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (BOOL)qmui_poppingByInteractivePopGestureRecognizer {
-    return [((NSNumber *)objc_getAssociatedObject(self, &kAssociatedObjectKey_poppingByInteractivePopGestureRecognizer)) boolValue];
-}
-
-static char kAssociatedObjectKey_willAppearByInteractivePopGestureRecognizer;
-- (void)setQmui_willAppearByInteractivePopGestureRecognizer:(BOOL)qmui_willAppearByInteractivePopGestureRecognizer {
-    objc_setAssociatedObject(self, &kAssociatedObjectKey_willAppearByInteractivePopGestureRecognizer, @(qmui_willAppearByInteractivePopGestureRecognizer), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (BOOL)qmui_willAppearByInteractivePopGestureRecognizer {
-    return [((NSNumber *)objc_getAssociatedObject(self, &kAssociatedObjectKey_willAppearByInteractivePopGestureRecognizer)) boolValue];
-}
-
-@end
-
 @protocol QMUI_viewWillAppearNotifyDelegate <NSObject>
 
 - (void)qmui_viewControllerDidInvokeViewWillAppear:(UIViewController *)viewController;
-
-@end
-
-@interface UIViewController (QMUINavigationControllerTransition)
-
-@property(nonatomic, weak) id<QMUI_viewWillAppearNotifyDelegate> qmui_viewWillAppearNotifyDelegate;
-
-@end
-
-@implementation UIViewController (QMUINavigationControllerTransition)
-
-+ (void)load {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        Class class = [self class];
-        ExchangeImplementations(class, @selector(viewWillAppear:), @selector(qmuiNav_viewWillAppear:));
-        ExchangeImplementations(class, @selector(viewDidAppear:), @selector(qmuiNav_viewDidAppear:));
-        ExchangeImplementations(class, @selector(viewDidDisappear:), @selector(qmuiNav_viewDidDisappear:));
-    });
-}
-
-- (void)qmuiNav_viewWillAppear:(BOOL)animated {
-    [self qmuiNav_viewWillAppear:animated];
-    if ([self.qmui_viewWillAppearNotifyDelegate respondsToSelector:@selector(qmui_viewControllerDidInvokeViewWillAppear:)]) {
-        [self.qmui_viewWillAppearNotifyDelegate qmui_viewControllerDidInvokeViewWillAppear:self];
-    }
-}
-
-- (void)qmuiNav_viewDidAppear:(BOOL)animated {
-    [self qmuiNav_viewDidAppear:animated];
-    self.qmui_poppingByInteractivePopGestureRecognizer = NO;
-    self.qmui_willAppearByInteractivePopGestureRecognizer = NO;
-}
-
-- (void)qmuiNav_viewDidDisappear:(BOOL)animated {
-    [self qmuiNav_viewDidDisappear:animated];
-    self.qmui_poppingByInteractivePopGestureRecognizer = NO;
-    self.qmui_willAppearByInteractivePopGestureRecognizer = NO;
-}
-
-static char kAssociatedObjectKey_qmui_viewWillAppearNotifyDelegate;
-- (void)setQmui_viewWillAppearNotifyDelegate:(id<QMUI_viewWillAppearNotifyDelegate>)qmui_viewWillAppearNotifyDelegate {
-    objc_setAssociatedObject(self, &kAssociatedObjectKey_qmui_viewWillAppearNotifyDelegate, [[QMUIWeakObjectContainer alloc] initWithObject:qmui_viewWillAppearNotifyDelegate], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (id<QMUI_viewWillAppearNotifyDelegate>)qmui_viewWillAppearNotifyDelegate {
-    id weakContainer = objc_getAssociatedObject(self, &kAssociatedObjectKey_qmui_viewWillAppearNotifyDelegate);
-    if ([weakContainer isKindOfClass:[QMUIWeakObjectContainer class]]) {
-        id notifyDelegate = [weakContainer object];
-        return notifyDelegate;
-    }
-    return nil;
-}
 
 @end
 
@@ -128,9 +47,68 @@ static char kAssociatedObjectKey_qmui_viewWillAppearNotifyDelegate;
 
 @end
 
+@interface UIViewController (QMUINavigationControllerTransition)
+
+@property(nonatomic, weak) id<QMUI_viewWillAppearNotifyDelegate> qmui_viewWillAppearNotifyDelegate;
+
+@end
+
+@implementation UIViewController (QMUINavigationControllerTransition)
+
++ (void)load {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        
+        ExtendImplementationOfVoidMethodWithSingleArgument([UIViewController class], @selector(viewWillAppear:), BOOL, ^(UIViewController *selfObject, BOOL firstArgv) {
+            if ([selfObject.qmui_viewWillAppearNotifyDelegate respondsToSelector:@selector(qmui_viewControllerDidInvokeViewWillAppear:)]) {
+                [selfObject.qmui_viewWillAppearNotifyDelegate qmui_viewControllerDidInvokeViewWillAppear:selfObject];
+            }
+        });
+        
+        ExtendImplementationOfVoidMethodWithSingleArgument([UIViewController class], @selector(viewDidAppear:), BOOL, ^(UIViewController *selfObject, BOOL firstArgv) {
+            if ([selfObject.navigationController.viewControllers containsObject:selfObject] && [selfObject.navigationController isKindOfClass:[QMUINavigationController class]]) {
+                ((QMUINavigationController *)selfObject.navigationController).isViewControllerTransiting = NO;
+            }
+            selfObject.qmui_poppingByInteractivePopGestureRecognizer = NO;
+            selfObject.qmui_willAppearByInteractivePopGestureRecognizer = NO;
+        });
+        
+        ExtendImplementationOfVoidMethodWithSingleArgument([UIViewController class], @selector(viewDidDisappear:), BOOL, ^(UIViewController *selfObject, BOOL firstArgv) {
+            selfObject.qmui_poppingByInteractivePopGestureRecognizer = NO;
+            selfObject.qmui_willAppearByInteractivePopGestureRecognizer = NO;
+        });
+    });
+}
+
+static char kAssociatedObjectKey_qmui_viewWillAppearNotifyDelegate;
+- (void)setQmui_viewWillAppearNotifyDelegate:(id<QMUI_viewWillAppearNotifyDelegate>)qmui_viewWillAppearNotifyDelegate {
+    objc_setAssociatedObject(self, &kAssociatedObjectKey_qmui_viewWillAppearNotifyDelegate, [[QMUIWeakObjectContainer alloc] initWithObject:qmui_viewWillAppearNotifyDelegate], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (id<QMUI_viewWillAppearNotifyDelegate>)qmui_viewWillAppearNotifyDelegate {
+    id weakContainer = objc_getAssociatedObject(self, &kAssociatedObjectKey_qmui_viewWillAppearNotifyDelegate);
+    if ([weakContainer isKindOfClass:[QMUIWeakObjectContainer class]]) {
+        id notifyDelegate = [weakContainer object];
+        return notifyDelegate;
+    }
+    return nil;
+}
+
+@end
+
 @implementation QMUINavigationController
 
 #pragma mark - 生命周期函数 && 基类方法重写
+
+- (instancetype)initWithRootViewController:(UIViewController *)rootViewController {
+    if (self = [super initWithRootViewController:rootViewController]) {
+        if (@available(iOS 13.0, *)) {
+            // -[UINavigationController initWithRootViewController:] 在 iOS 13 以下的版本内部会调用 [self initWithNibName:bundle] 而在 iOS 13 上则是直接调用 [super initWithNibName:bundle] 所以这里需要手动调用一次 [self didInitialize]
+            [self didInitialize];
+        }
+    }
+    return self;
+}
 
 - (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
@@ -154,14 +132,9 @@ static char kAssociatedObjectKey_qmui_viewWillAppearNotifyDelegate;
     self.delegate = self.delegator;
     
     // UIView.tintColor 并不支持 UIAppearance 协议，所以不能通过 appearance 来设置，只能在实例里设置
-    UIColor *tintColor = NavBarTintColor;
-    if (tintColor) {
-        self.navigationBar.tintColor = tintColor;
-    }
-    
-    tintColor = ToolBarTintColor;
-    if (tintColor) {
-        self.toolbar.tintColor = tintColor;
+    if (QMUICMIActivated) {
+        self.navigationBar.tintColor = NavBarTintColor;
+        self.toolbar.tintColor = ToolBarTintColor;
     }
 }
 
@@ -205,11 +178,11 @@ static char kAssociatedObjectKey_qmui_viewWillAppearNotifyDelegate;
         [((UIViewController<QMUINavigationControllerTransitionDelegate> *)viewController) willPopInNavigationControllerWithAnimated:animated];
     }
     
-    QMUILog(@"NavigationItem", @"call popViewControllerAnimated:%@, current viewControllers = %@", StringFromBOOL(animated), self.viewControllers);
+//    QMUILog(@"NavigationItem", @"call popViewControllerAnimated:%@, current viewControllers = %@", StringFromBOOL(animated), self.viewControllers);
     
     viewController = [super popViewControllerAnimated:animated];
     
-    QMUILog(@"NavigationItem", @"pop viewController: %@", viewController);
+//    QMUILog(@"NavigationItem", @"pop viewController: %@", viewController);
     
     if ([viewController respondsToSelector:@selector(didPopInNavigationControllerWithAnimated:)]) {
         [((UIViewController<QMUINavigationControllerTransitionDelegate> *)viewController) didPopInNavigationControllerWithAnimated:animated];
@@ -325,17 +298,17 @@ static char kAssociatedObjectKey_qmui_viewWillAppearNotifyDelegate;
 
 - (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated {
     if (self.isViewControllerTransiting || !viewController) {
-        QMUILog(NSStringFromClass(self.class), @"%@, 上一次界面切换的动画尚未结束就试图进行新的 push 操作，为了避免产生 bug，拦截了这次 push。\n%s, isViewControllerTransiting = %@, viewController = %@, self.viewControllers = %@", NSStringFromClass(self.class),  __func__, StringFromBOOL(self.isViewControllerTransiting), viewController, self.viewControllers);
+        QMUILogWarn(NSStringFromClass(self.class), @"%@, 上一次界面切换的动画尚未结束就试图进行新的 push 操作，为了避免产生 bug，拦截了这次 push。\n%s, isViewControllerTransiting = %@, viewController = %@, self.viewControllers = %@", NSStringFromClass(self.class),  __func__, StringFromBOOL(self.isViewControllerTransiting), viewController, self.viewControllers);
         return;
     }
     
-    // 增加一个 presentedViewController 作为判断条件是因为这个 issue：https://github.com/QMUI/QMUI_iOS/issues/261
+    // 增加一个 presentedViewController 作为判断条件是因为这个 issue：https://github.com/Tencent/QMUI_iOS/issues/261
     if (!self.presentedViewController && animated) {
         self.isViewControllerTransiting = YES;
     }
     
     if (self.presentedViewController) {
-        QMUILog(NSStringFromClass(self.class), @"push 的时候 navigationController 存在一个盖在上面的 presentedViewController，可能导致一些 UINavigationControllerDelegate 不会被调用");
+        QMUILogWarn(NSStringFromClass(self.class), @"push 的时候 navigationController 存在一个盖在上面的 presentedViewController，可能导致一些 UINavigationControllerDelegate 不会被调用");
     }
     
     UIViewController *currentViewController = self.topViewController;
@@ -351,12 +324,14 @@ static char kAssociatedObjectKey_qmui_viewWillAppearNotifyDelegate;
             }
         }
     }
+    
     [super pushViewController:viewController animated:animated];
-}
-
-// 重写这个方法才能让 viewControllers 对 statusBar 的控制生效
-- (UIViewController *)childViewControllerForStatusBarStyle {
-    return self.topViewController;
+    
+    // 某些情况下 push 操作可能会被系统拦截，实际上该 push 并不生效，这种情况下应当恢复相关标志位，否则会影响后续的 push 操作
+    // https://github.com/Tencent/QMUI_iOS/issues/426
+    if (![self.viewControllers containsObject:viewController]) {
+        self.isViewControllerTransiting = NO;
+    }
 }
 
 #pragma mark - 自定义方法
@@ -379,7 +354,7 @@ static char kAssociatedObjectKey_qmui_viewWillAppearNotifyDelegate;
     viewControllerWillDisappear.qmui_poppingByInteractivePopGestureRecognizer = YES;
     viewControllerWillDisappear.qmui_willAppearByInteractivePopGestureRecognizer = NO;
     
-    viewControllerWillDisappear.qmui_poppingByInteractivePopGestureRecognizer = NO;
+    viewControllerWillAppear.qmui_poppingByInteractivePopGestureRecognizer = NO;
     viewControllerWillAppear.qmui_willAppearByInteractivePopGestureRecognizer = YES;
     
     if (state == UIGestureRecognizerStateBegan) {
@@ -395,7 +370,7 @@ static char kAssociatedObjectKey_qmui_viewWillAppearNotifyDelegate;
     
     if (state == UIGestureRecognizerStateEnded) {
         if (CGRectGetMinX(self.topViewController.view.superview.frame) < 0) {
-            // by molice:只是碰巧发现如果是手势返回取消时，不管在哪个位置取消，self.topViewController.view.superview.frame.orgin.x必定是-124，所以用这个<0的条件来判断
+            // by molice:只是碰巧发现如果是手势返回取消时，不管在哪个位置取消，self.topViewController.view.superview.frame.orgin.x必定是-112，所以用这个<0的条件来判断
             QMUILog(NSStringFromClass(self.class), @"手势返回放弃了");
             viewControllerWillDisappear = self.topViewController;
             viewControllerWillAppear = self.viewControllerPopping;
@@ -420,24 +395,38 @@ static char kAssociatedObjectKey_qmui_viewWillAppearNotifyDelegate;
     self.isViewControllerTransiting = NO;
 }
 
+#pragma mark - StatusBar
+
+- (UIViewController *)childViewControllerForStatusBarHidden {
+    return self.topViewController;
+}
+
+- (UIViewController *)childViewControllerForStatusBarStyle {
+    return self.topViewController;
+}
+
 #pragma mark - 屏幕旋转
 
 - (BOOL)shouldAutorotate {
-    return [self.topViewController qmui_hasOverrideUIKitMethod:_cmd] ? [self.topViewController shouldAutorotate] : YES;
+    return [self.visibleViewController qmui_hasOverrideUIKitMethod:_cmd] ? [self.visibleViewController shouldAutorotate] : YES;
 }
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    return [self.topViewController qmui_hasOverrideUIKitMethod:_cmd] ? [self.topViewController supportedInterfaceOrientations] : SupportedOrientationMask;
+    // fix UIAlertController:supportedInterfaceOrientations was invoked recursively!
+    // crash in iOS 9 and show log in iOS 10 and later
+    // https://github.com/Tencent/QMUI_iOS/issues/502
+    // https://github.com/Tencent/QMUI_iOS/issues/632
+    UIViewController *visibleViewController = self.visibleViewController;
+    if (!visibleViewController || visibleViewController.isBeingDismissed || [visibleViewController isKindOfClass:UIAlertController.class]) {
+        visibleViewController = self.topViewController;
+    }
+    return [visibleViewController qmui_hasOverrideUIKitMethod:_cmd] ? [visibleViewController supportedInterfaceOrientations] : SupportedOrientationMask;
 }
 
 #pragma mark - HomeIndicator
 
 - (UIViewController *)childViewControllerForHomeIndicatorAutoHidden {
     return self.topViewController;
-}
-
-- (BOOL)prefersHomeIndicatorAutoHidden {
-    return NO;
 }
 
 @end
@@ -465,7 +454,6 @@ static char kAssociatedObjectKey_qmui_viewWillAppearNotifyDelegate;
 
 - (void)navigationController:(QMUINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
     navigationController.viewControllerPopping = nil;
-    navigationController.isViewControllerTransiting = NO;
     [navigationController didShowViewController:viewController animated:animated];
 }
 
