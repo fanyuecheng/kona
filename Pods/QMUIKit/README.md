@@ -31,7 +31,9 @@ QMUI iOS 是一个致力于提高项目 UI 开发效率的解决方案，其设�
 
 ## 支持iOS版本
 
-从 3.0.0 开始，QMUI 支持 iOS 9+，2.x 版本支持 iOS 8+。
+1. 4.2.0 及以上，iOS 10+。
+2. 3.0.0 及以上，iOS 9+。
+3. 2.0.0 及以上，iOS 8+。
 
 ## 使用方法
 
@@ -51,7 +53,7 @@ QMUI iOS 是一个致力于提高项目 UI 开发效率的解决方案，其设�
 - 关于 AutoLayout：通常可以配合 Masonry 等常见的 AutoLayout 框架使用，若遇到不兼容的个案请提 issue。
 - 关于 xib / storyboard：现已全面支持。
 - 关于 Swift：可以正常使用，如遇到问题请提 issue。
-- 关于隐私：从 2.8.0 版本开始，QMUIKit 默认会在 Debug 模式下启动 App 时发送当前 App 的 Bundle Identifier 和 Display Name 给 QMUI 作统计用，Release 下不会发送。你也可以通过配置表的 `SendAnalyticsToQMUITeam` 开关将统计关闭。统计的代码在 [QMUIConfiguration.m:91](https://github.com/Tencent/QMUI_iOS/blob/master/QMUIKit/QMUICore/QMUIConfiguration.m#L91-L101)，可直接查看。
+- 关于隐私：从 2.8.0 版本开始，QMUIKit 默认会在 Debug 模式下启动 App 时发送当前 App 的 Bundle Identifier 和 Display Name 给 QMUI 作统计用，Release 下不会发送。你也可以通过配置表的 `SendAnalyticsToQMUITeam` 开关将统计关闭。统计的代码在 [QMUIConfiguration.m:116](https://github.com/Tencent/QMUI_iOS/blob/master/QMUIKit/QMUICore/QMUIConfiguration.m#L116-L126)，可直接查看。
 
 ## 设计资源
 

@@ -1,10 +1,10 @@
-/*****
+/**
  * Tencent is pleased to support the open source community by making QMUI_iOS available.
- * Copyright (C) 2016-2019 THL A29 Limited, a Tencent company. All rights reserved.
+ * Copyright (C) 2016-2020 THL A29 Limited, a Tencent company. All rights reserved.
  * Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
  * http://opensource.org/licenses/MIT
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
- *****/
+ */
 
 //
 //  UIScrollView+QMUI.m
@@ -17,15 +17,18 @@
 #import "QMUICore.h"
 #import "NSNumber+QMUI.h"
 #import "UIView+QMUI.h"
+#import "UIViewController+QMUI.h"
 
 @interface UIScrollView ()
 
 @property(nonatomic, assign) CGFloat qmuiscroll_lastInsetTopWhenScrollToTop;
+@property(nonatomic, assign) BOOL qmuiscroll_hasSetInitialContentInset;
 @end
 
 @implementation UIScrollView (QMUI)
 
 QMUISynthesizeCGFloatProperty(qmuiscroll_lastInsetTopWhenScrollToTop, setQmuiscroll_lastInsetTopWhenScrollToTop)
+QMUISynthesizeBOOLProperty(qmuiscroll_hasSetInitialContentInset, setQmuiscroll_hasSetInitialContentInset)
 
 + (void)load {
     static dispatch_once_t onceToken;
@@ -94,7 +97,10 @@ static char kAssociatedObjectKey_initialContentInset;
     objc_setAssociatedObject(self, &kAssociatedObjectKey_initialContentInset, [NSValue valueWithUIEdgeInsets:qmui_initialContentInset], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     self.contentInset = qmui_initialContentInset;
     self.scrollIndicatorInsets = qmui_initialContentInset;
-    [self qmui_scrollToTopUponContentInsetTopChange];
+    if (!self.qmuiscroll_hasSetInitialContentInset || !self.qmui_viewController || self.qmui_viewController.qmui_visibleState < QMUIViewControllerDidAppear) {
+        [self qmui_scrollToTopUponContentInsetTopChange];
+    }
+    self.qmuiscroll_hasSetInitialContentInset = YES;
 }
 
 - (UIEdgeInsets)qmui_initialContentInset {

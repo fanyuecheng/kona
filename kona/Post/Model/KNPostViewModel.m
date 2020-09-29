@@ -94,8 +94,15 @@
         [cell.contentView addSubview:imageView];
     }
     
-    [imageView sd_setImageWithURL:[NSURL URLWithString:post.preview_url] placeholderImage:[UIImage qmui_imageWithColor:UIColorMake(248, 248, 248)]];
+    imageView.sd_imageIndicator = [SDWebImageActivityIndicator grayIndicator];
+    [imageView.sd_imageIndicator startAnimatingIndicator];
     
+    [imageView sd_setImageWithURL:[NSURL URLWithString:post.preview_url] placeholderImage:[UIImage qmui_imageWithColor:UIColorMake(248, 248, 248)] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [imageView.sd_imageIndicator stopAnimatingIndicator];
+        });
+    }];
+     
     return cell;
 }
 
