@@ -1,6 +1,6 @@
 /**
  * Tencent is pleased to support the open source community by making QMUI_iOS available.
- * Copyright (C) 2016-2020 THL A29 Limited, a Tencent company. All rights reserved.
+ * Copyright (C) 2016-2021 THL A29 Limited, a Tencent company. All rights reserved.
  * Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
  * http://opensource.org/licenses/MIT
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
@@ -18,6 +18,8 @@
 #import "UIBezierPath+QMUI.h"
 #import "UIColor+QMUI.h"
 #import "QMUILog.h"
+#import <ImageIO/ImageIO.h>
+#import <CoreImage/CoreImage.h>
 #import <Accelerate/Accelerate.h>
 
 CG_INLINE CGSize
@@ -153,11 +155,9 @@ CGSizeFlatSpecificScale(CGSize size, float scale) {
 
 - (UIImage *)qmui_imageWithTintColor:(UIColor *)tintColor {
     // iOS 13 的 imageWithTintColor: 方法里并不会去更新 CGImage，所以通过它更改了图片颜色后再获取到的 CGImage 依然是旧的，因此暂不使用
-//#ifdef IOS13_SDK_ALLOWED
 //    if (@available(iOS 13.0, *)) {
 //        return [self imageWithTintColor:tintColor];
 //    }
-//#endif
     BOOL opaque = self.qmui_opaque ? tintColor.qmui_alpha >= 1.0 : NO;// 如果图片不透明但 tintColor 半透明，则生成的图片也应该是半透明的
     return [UIImage qmui_imageWithSize:self.size opaque:opaque scale:self.scale actions:^(CGContextRef contextRef) {
         CGContextTranslateCTM(contextRef, 0, self.size.height);
@@ -440,15 +440,16 @@ CGSizeFlatSpecificScale(CGSize size, float scale) {
     CGImageSourceRef source = CGImageSourceCreateWithData((__bridge CFDataRef)data, NULL);
     size_t count = CGImageSourceGetCount(source);
     UIImage *animatedImage = nil;
+    scale = scale == 0 ? ScreenScale : scale;
     if (count <= 1) {
-        animatedImage = [[UIImage alloc] initWithData:data];
+        animatedImage = [[UIImage alloc] initWithData:data scale:scale];
     } else {
         NSMutableArray<UIImage *> *images = [[NSMutableArray alloc] init];
         NSTimeInterval duration = 0.0f;
         for (size_t i = 0; i < count; i++) {
             CGImageRef image = CGImageSourceCreateImageAtIndex(source, i, NULL);
             duration += [self qmui_frameDurationAtIndex:i source:source];
-            UIImage *frameImage = [UIImage imageWithCGImage:image scale:scale == 0 ? ScreenScale : scale orientation:UIImageOrientationUp];
+            UIImage *frameImage = [UIImage imageWithCGImage:image scale:scale orientation:UIImageOrientationUp];
             [images addObject:frameImage];
             CGImageRelease(image);
         }

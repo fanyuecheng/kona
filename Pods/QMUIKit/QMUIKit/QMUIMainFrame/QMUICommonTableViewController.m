@@ -1,6 +1,6 @@
 /**
  * Tencent is pleased to support the open source community by making QMUI_iOS available.
- * Copyright (C) 2016-2020 THL A29 Limited, a Tencent company. All rights reserved.
+ * Copyright (C) 2016-2021 THL A29 Limited, a Tencent company. All rights reserved.
  * Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
  * http://opensource.org/licenses/MIT
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
@@ -84,12 +84,12 @@ NSString *const QMUICommonTableViewControllerSectionFooterIdentifier = @"QMUISec
         return [super description];
     }
     
-    NSString *result = [NSString stringWithFormat:@"%@\ntableView:\t\t\t\t%@", [super description], self.tableView];
-    NSInteger sections = [self.tableView.dataSource numberOfSectionsInTableView:self.tableView];
+    NSString *tableView = [NSString stringWithFormat:@"<%@: %p>", NSStringFromClass(self.tableView.class), self.tableView];
+    NSString *result = [NSString stringWithFormat:@"%@\ntableView:\t\t\t\t%@", [super description], tableView];
+    NSInteger sections = [self.tableView.dataSource respondsToSelector:@selector(numberOfSectionsInTableView:)] ? [self.tableView.dataSource numberOfSectionsInTableView:self.tableView] : 1;
     if (sections > 0) {
         NSMutableString *sectionCountString = [[NSMutableString alloc] init];
-        [sectionCountString appendFormat:@"\ndataCount(%@):\t\t\t\t(\n", @(sections)];
-        NSInteger sections = [self.tableView.dataSource numberOfSectionsInTableView:self.tableView];
+        [sectionCountString appendFormat:@"\ndataCount(%@):\t\t\t(\n", @(sections)];
         for (NSInteger i = 0; i < sections; i++) {
             NSInteger rows = [self.tableView.dataSource tableView:self.tableView numberOfRowsInSection:i];
             [sectionCountString appendFormat:@"\t\t\t\t\t\t\tsection%@ - rows%@%@\n", @(i), @(rows), i < sections - 1 ? @"," : @""];
@@ -174,8 +174,13 @@ NSString *const QMUICommonTableViewControllerSectionFooterIdentifier = @"QMUISec
             [_tableView addObserver:self._qmuiTableViewObserver forKeyPath:@"contentInset" options:NSKeyValueObservingOptionOld context:nil];
         }
         
-        // 触发 loadView
-        [self.view addSubview:_tableView];
+        // 从 nib 初始化的界面，loadView 里 tableView 已经被加到 self.view 上了，但此时 loadView 尚未结束，所以 isViewLoaded 为 NO。这种场景不需要自己 addSubview，也不应该去调用 self.view 触发 loadView
+        // https://github.com/Tencent/QMUI_iOS/issues/1156
+        if (tableView.superview && self.nibName && !self.isViewLoaded) {
+        } else {
+            // 触发 loadView
+            [self.view addSubview:_tableView];
+        }
     }
 }
 
@@ -213,12 +218,7 @@ NSString *const QMUICommonTableViewControllerSectionFooterIdentifier = @"QMUISec
         return NO;
     }
     
-    UIEdgeInsets insets = self.tableView.contentInset;
-    if (@available(iOS 11, *)) {
-        if (self.tableView.contentInsetAdjustmentBehavior != UIScrollViewContentInsetAdjustmentNever) {
-            insets = self.tableView.adjustedContentInset;
-        }
-    }
+    UIEdgeInsets insets = self.tableView.qmui_contentInset;
     
     // 当存在 tableHeaderView 时，emptyView 的高度为 tableView 的高度减去 headerView 的高度
     if (self.tableView.tableHeaderView) {

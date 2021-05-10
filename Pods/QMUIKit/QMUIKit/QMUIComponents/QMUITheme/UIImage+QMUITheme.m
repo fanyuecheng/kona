@@ -1,6 +1,6 @@
 /**
  * Tencent is pleased to support the open source community by making QMUI_iOS available.
- * Copyright (C) 2016-2020 THL A29 Limited, a Tencent company. All rights reserved.
+ * Copyright (C) 2016-2021 THL A29 Limited, a Tencent company. All rights reserved.
  * Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
  * http://opensource.org/licenses/MIT
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
@@ -18,7 +18,14 @@
 #import "QMUIThemePrivate.h"
 #import "NSMethodSignature+QMUI.h"
 #import "QMUICore.h"
+#import "UIImage+QMUI.h"
 #import <objc/message.h>
+
+@interface UIImage (QMUITheme)
+
+@property(nonatomic, assign) BOOL qmui_shouldUseSystemIMP;
++ (nullable UIImage *)qmui_dynamicImageWithOriginalImage:(UIImage *)image tintColor:(UIColor *)tintColor originalActionBlock:(UIImage * (^)(UIImage *aImage, UIColor *aTintColor))originalActionBlock;
+@end
 
 @interface QMUIThemeImageCache : NSCache
 
@@ -67,24 +74,40 @@
 
 @implementation QMUIThemeImage
 
-
 static IMP qmui_getMsgForwardIMP(NSObject *self, SEL selector) {
+    
     IMP msgForwardIMP = _objc_msgForward;
-    #if !defined(__arm64__)
-        Class cls = self.class;
-        Method method = class_getInstanceMethod(cls, selector);
-        const char *typeDescription = method_getTypeEncoding(method);
-        if (typeDescription[0] == '{') {
-            // 以下代码参考 JSPatch 的实现：
-            //In some cases that returns struct, we should use the '_stret' API:
-            //http://sealiesoftware.com/blog/archive/2008/10/30/objc_explain_objc_msgSend_stret.html
-            //NSMethodSignature knows the detail but has no API to return, we can only get the info from debugDescription.
-            NSMethodSignature *methodSignature = [NSMethodSignature signatureWithObjCTypes:typeDescription];
-            if ([methodSignature.debugDescription rangeOfString:@"is special struct return? YES"].location != NSNotFound) {
-                msgForwardIMP = (IMP)_objc_msgForward_stret;
+#if !defined(__arm64__)
+    // As an ugly internal runtime implementation detail in the 32bit runtime, we need to determine of the method we hook returns a struct or anything larger than id.
+    // https://developer.apple.com/library/mac/documentation/DeveloperTools/Conceptual/LowLevelABI/000-Introduction/introduction.html
+    // https://github.com/ReactiveCocoa/ReactiveCocoa/issues/783
+    // http://infocenter.arm.com/help/topic/com.arm.doc.ihi0042e/IHI0042E_aapcs.pdf (Section 5.4)
+    Method method = class_getInstanceMethod(self.class, selector);
+    const char *encoding = method_getTypeEncoding(method);
+    BOOL methodReturnsStructValue = encoding[0] == _C_STRUCT_B;
+    if (methodReturnsStructValue) {
+        @try {
+            // 以下代码参考 JSPatch 的实现，但在 OpenCV 时会抛异常
+            NSMethodSignature *methodSignature = [NSMethodSignature signatureWithObjCTypes:encoding];
+            if ([methodSignature.debugDescription rangeOfString:@"is special struct return? YES"].location == NSNotFound) {
+                methodReturnsStructValue = NO;
             }
+        } @catch (__unused NSException *e) {
+            // 以下代码参考 Aspect 的实现，可以兼容 OpenCV
+            @try {
+                NSUInteger valueSize = 0;
+                NSGetSizeAndAlignment(encoding, &valueSize, NULL);
+
+                if (valueSize == 1 || valueSize == 2 || valueSize == 4 || valueSize == 8) {
+                    methodReturnsStructValue = NO;
+                }
+            } @catch (NSException *exception) {}
         }
-    #endif
+    }
+    if (methodReturnsStructValue) {
+        msgForwardIMP = (IMP)_objc_msgForward_stret;
+    }
+#endif
     return msgForwardIMP;
 }
 
@@ -271,8 +294,6 @@ static IMP qmui_getMsgForwardIMP(NSObject *self, SEL selector) {
     return self.qmui_rawImage.imageWithHorizontallyFlippedOrientation;
 }
 
-#ifdef IOS13_SDK_ALLOWED
-
 - (BOOL)isSymbolImage {
     return self.qmui_rawImage.isSymbolImage;
 }
@@ -309,16 +330,6 @@ static IMP qmui_getMsgForwardIMP(NSObject *self, SEL selector) {
     return [self.qmui_rawImage imageByApplyingSymbolConfiguration:configuration];
 }
 
-- (UIImage *)imageWithTintColor:(UIColor *)color {
-    return [self.qmui_rawImage imageWithTintColor:color];
-}
-
-- (UIImage *)imageWithTintColor:(UIColor *)color renderingMode:(UIImageRenderingMode)renderingMode {
-    return [self.qmui_rawImage imageWithTintColor:color renderingMode:renderingMode];
-}
-
-#endif
-
 #pragma mark - <QMUIDynamicImageProtocol>
 
 - (UIImage *)qmui_rawImage {
@@ -337,9 +348,137 @@ static IMP qmui_getMsgForwardIMP(NSObject *self, SEL selector) {
     return YES;
 }
 
+#pragma mark - Translator
+
+// 由于 QMUIThemeImage 的实现里，如果某些方法 QMUIThemeImage 本身没实现，那么就会以消息转发的方式转发给 rawImage，这就导致我们无法直接用 method swizzle 的方式去重写 UIImage.class 的 imageWithTintColor 系列方法并期望它能同时作用于 UIImage 和 QMUIThemeImage（后者总是无效的，因为最终接收消息的总是 rawImage 而不是 QMUIThemeImage），所以这里需要这么冗余地显式写一遍
+
+- (UIImage *)imageWithTintColor:(UIColor *)color {
+    return [UIImage qmui_dynamicImageWithOriginalImage:self tintColor:color originalActionBlock:^UIImage *(UIImage *aImage, UIColor *aTintColor) {
+        aImage.qmui_shouldUseSystemIMP = YES;
+        return [aImage imageWithTintColor:color];
+    }];
+}
+
+- (UIImage *)imageWithTintColor:(UIColor *)color renderingMode:(UIImageRenderingMode)renderingMode {
+    return [UIImage qmui_dynamicImageWithOriginalImage:self tintColor:color originalActionBlock:^UIImage *(UIImage *aImage, UIColor *aTintColor) {
+        aImage.qmui_shouldUseSystemIMP = YES;
+        return [aImage imageWithTintColor:color renderingMode:renderingMode];
+    }];
+}
+
+- (UIImage *)qmui_imageWithTintColor:(UIColor *)color {
+    return [UIImage qmui_dynamicImageWithOriginalImage:self tintColor:color originalActionBlock:^UIImage *(UIImage *aImage, UIColor *aTintColor) {
+        aImage.qmui_shouldUseSystemIMP = YES;
+        return [aImage qmui_imageWithTintColor:color];
+    }];
+}
+
 @end
 
 @implementation UIImage (QMUITheme)
+
+QMUISynthesizeBOOLProperty(qmui_shouldUseSystemIMP, setQmui_shouldUseSystemIMP)
+
++ (void)load {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        
+        // 支持用一个动态颜色直接生成一个动态图片
+        OverrideImplementation(object_getClass(UIImage.class), @selector(qmui_imageWithColor:size:cornerRadius:), ^id(__unsafe_unretained Class originClass, SEL originCMD, IMP (^originalIMPProvider)(void)) {
+            return ^UIImage *(UIImage *selfObject, UIColor *color, CGSize size, CGFloat cornerRadius) {
+                
+                // call super
+                UIImage * (^callSuperBlock)(UIColor *, CGSize, CGFloat) = ^UIImage *(UIColor *aColor, CGSize aSize, CGFloat aCornerRadius) {
+                    UIImage * (*originSelectorIMP)(id, SEL, UIColor *, CGSize, CGFloat);
+                    originSelectorIMP = (UIImage * (*)(id, SEL, UIColor *, CGSize, CGFloat))originalIMPProvider();
+                    UIImage * result = originSelectorIMP(selfObject, originCMD, aColor, aSize, aCornerRadius);
+                    return result;
+                };
+                
+                if ([color isKindOfClass:QMUIThemeColor.class]) {
+                    return [UIImage qmui_imageWithThemeProvider:^UIImage * _Nonnull(__kindof QMUIThemeManager * _Nonnull manager, __kindof NSObject<NSCopying> * _Nullable identifier, __kindof NSObject * _Nullable theme) {
+                        return callSuperBlock(((QMUIThemeColor *)color).themeProvider(manager, identifier, theme), size, cornerRadius);
+                    }];
+                }
+                return callSuperBlock(color, size, cornerRadius);
+            };
+        });
+        
+        OverrideImplementation(object_getClass(UIImage.class), @selector(qmui_imageWithColor:size:cornerRadiusArray:), ^id(__unsafe_unretained Class originClass, SEL originCMD, IMP (^originalIMPProvider)(void)) {
+            return ^UIImage *(UIImage *selfObject, UIColor *color, CGSize size, NSArray<NSNumber *> *cornerRadius) {
+                
+                // call super
+                UIImage * (^callSuperBlock)(UIColor *, CGSize, NSArray<NSNumber *> *) = ^UIImage *(UIColor *aColor, CGSize aSize, NSArray<NSNumber *> * aCornerRadius) {
+                    UIImage * (*originSelectorIMP)(id, SEL, UIColor *, CGSize, NSArray<NSNumber *> *);
+                    originSelectorIMP = (UIImage * (*)(id, SEL, UIColor *, CGSize, NSArray<NSNumber *> *))originalIMPProvider();
+                    UIImage * result = originSelectorIMP(selfObject, originCMD, aColor, aSize, aCornerRadius);
+                    return result;
+                };
+                
+                if ([color isKindOfClass:QMUIThemeColor.class]) {
+                    return [UIImage qmui_imageWithThemeProvider:^UIImage * _Nonnull(__kindof QMUIThemeManager * _Nonnull manager, __kindof NSObject<NSCopying> * _Nullable identifier, __kindof NSObject * _Nullable theme) {
+                        return callSuperBlock(((QMUIThemeColor *)color).themeProvider(manager, identifier, theme), size, cornerRadius);
+                    }];
+                }
+                return callSuperBlock(color, size, cornerRadius);
+            };
+        });
+        
+        // 令一个静态图片叠加动态颜色可以转换成动态图片
+        OverrideImplementation([UIImage class], @selector(qmui_imageWithTintColor:), ^id(__unsafe_unretained Class originClass, SEL originCMD, IMP (^originalIMPProvider)(void)) {
+            return ^UIImage *(UIImage *selfObject, UIColor *tintColor) {
+                
+                UIImage *result = [UIImage qmui_dynamicImageWithOriginalImage:selfObject tintColor:tintColor originalActionBlock:^UIImage *(UIImage *aImage, UIColor *aTintColor) {
+                    aImage.qmui_shouldUseSystemIMP = YES;
+                    return [aImage qmui_imageWithTintColor:aTintColor];
+                }];
+                if (!result) {
+                    // call super
+                    UIImage *(*originSelectorIMP)(id, SEL, UIColor *);
+                    originSelectorIMP = (UIImage * (*)(id, SEL, UIColor *))originalIMPProvider();
+                    result = originSelectorIMP(selfObject, originCMD, tintColor);
+                }
+                return result;
+            };
+        });
+        if (@available(iOS 13.0, *)) {
+            // 如果一个静态的 UIImage 通过 imageWithTintColor: 传入一个动态的颜色，那么这个 UIImage 也会变成动态的，但这个动态图片是 iOS 13 系统原生的动态图片，无法响应 QMUITheme，所以这里需要为 QMUIThemeImage 做特殊处理。
+            // 注意，系统的 imageWithTintColor: 不会调用 imageWithTintColor:renderingMode:，所以要分开重写两个方法
+            OverrideImplementation([UIImage class], @selector(imageWithTintColor:), ^id(__unsafe_unretained Class originClass, SEL originCMD, IMP (^originalIMPProvider)(void)) {
+                return ^UIImage *(UIImage *selfObject, UIColor *tintColor) {
+                    
+                    UIImage *result = [UIImage qmui_dynamicImageWithOriginalImage:selfObject tintColor:tintColor originalActionBlock:^UIImage *(UIImage *aImage, UIColor *aTintColor) {
+                        aImage.qmui_shouldUseSystemIMP = YES;
+                        return [aImage imageWithTintColor:aTintColor];
+                    }];
+                    if (!result) {
+                        // call super
+                        UIImage *(*originSelectorIMP)(id, SEL, UIColor *);
+                        originSelectorIMP = (UIImage * (*)(id, SEL, UIColor *))originalIMPProvider();
+                        result = originSelectorIMP(selfObject, originCMD, tintColor);
+                    }
+                    return result;
+                };
+            });
+            OverrideImplementation([UIImage class], @selector(imageWithTintColor:renderingMode:), ^id(__unsafe_unretained Class originClass, SEL originCMD, IMP (^originalIMPProvider)(void)) {
+                return ^UIImage *(UIImage *selfObject, UIColor *tintColor, UIImageRenderingMode renderingMode) {
+                    
+                    UIImage *result = [UIImage qmui_dynamicImageWithOriginalImage:selfObject tintColor:tintColor originalActionBlock:^UIImage *(UIImage *aImage, UIColor *aTintColor) {
+                        aImage.qmui_shouldUseSystemIMP = YES;
+                        return [aImage imageWithTintColor:aTintColor renderingMode:renderingMode];
+                    }];
+                    if (!result) {
+                        // call super
+                        UIImage *(*originSelectorIMP)(id, SEL, UIColor *, UIImageRenderingMode);
+                        originSelectorIMP = (UIImage * (*)(id, SEL, UIColor *, UIImageRenderingMode))originalIMPProvider();
+                        result = originSelectorIMP(selfObject, originCMD, tintColor, renderingMode);
+                    }
+                    return result;
+                };
+            });
+        }
+    });
+}
 
 + (UIImage *)qmui_imageWithThemeProvider:(UIImage * _Nonnull (^)(__kindof QMUIThemeManager * _Nonnull, __kindof NSObject<NSCopying> * _Nullable, __kindof NSObject * _Nullable))provider {
     return [UIImage qmui_imageWithThemeManagerName:QMUIThemeManagerNameDefault provider:provider];
@@ -351,6 +490,29 @@ static IMP qmui_getMsgForwardIMP(NSObject *self, SEL selector) {
     image.managerName = name;
     image.themeProvider = provider;
     return (UIImage *)image;
+}
+
++ (nullable UIImage *)qmui_dynamicImageWithOriginalImage:(UIImage *)image tintColor:(UIColor *)tintColor originalActionBlock:(UIImage * (^)(UIImage *aImage, UIColor *aTintColor))originalActionBlock {
+    if (image.qmui_shouldUseSystemIMP) {
+        image.qmui_shouldUseSystemIMP = NO;
+        return nil;
+    }
+    if ([image isKindOfClass:QMUIThemeImage.class]) {
+        // 当前是动态 image，不管 tintColor 是否为动态的，都返回一个动态 image
+        QMUIThemeImage *themeImage = (QMUIThemeImage *)image;
+        return [UIImage qmui_imageWithThemeProvider:^UIImage * _Nonnull(__kindof QMUIThemeManager * _Nonnull manager, __kindof NSObject<NSCopying> * _Nullable identifier, __kindof NSObject * _Nullable theme) {
+            return originalActionBlock(themeImage.themeProvider(manager, identifier, theme), tintColor);
+        }];
+    }
+    if ([tintColor isKindOfClass:QMUIThemeColor.class]) {
+        // 当前是静态 image，则只有当 tintColor 是动态的时候才将静态 image 转换为动态 image
+        return [UIImage qmui_imageWithThemeProvider:^UIImage * _Nonnull(__kindof QMUIThemeManager * _Nonnull manager, __kindof NSObject<NSCopying> * _Nullable identifier, __kindof NSObject * _Nullable theme) {
+            QMUIThemeColor *themeColor = (QMUIThemeColor *)tintColor;
+            return originalActionBlock(image, themeColor.themeProvider(manager, identifier, theme));
+        }];
+    }
+    
+    return nil;
 }
 
 #pragma mark - <QMUIDynamicImageProtocol>

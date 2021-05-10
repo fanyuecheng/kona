@@ -1,17 +1,14 @@
-# Uncomment the next line to define a global platform for your project
-# platform :ios, '10.0'
+platform :ios, '10.0'
 
-target 'kona' do
-  # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
-  # use_frameworks!
+target 'kona' do 
 
-  # Pods for kona
+use_frameworks! 
 
-pod 'XMNetworking'
-pod 'YYModel'
-pod 'MJRefresh'
-pod 'SDWebImage'
-pod 'QMUIKit'
-pod 'Masonry'
+pod 'XMNetworking', '~> 1.1.0' 
+pod 'YYModel', '~> 1.0.4' 
+pod 'MJRefresh', '~> 3.5.0' 
+pod 'SDWebImage', '~> 5.11.1' 
+pod 'QMUIKit', '~> 4.2.3' 
+pod 'Masonry', '~> 1.1.0' 
 
 end

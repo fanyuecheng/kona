@@ -1,6 +1,6 @@
 /**
  * Tencent is pleased to support the open source community by making QMUI_iOS available.
- * Copyright (C) 2016-2020 THL A29 Limited, a Tencent company. All rights reserved.
+ * Copyright (C) 2016-2021 THL A29 Limited, a Tencent company. All rights reserved.
  * Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
  * http://opensource.org/licenses/MIT
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
@@ -24,6 +24,11 @@ NS_ASSUME_NONNULL_BEGIN
 @interface UISearchBar (QMUI)
 
 /**
+ 获取与 searchBar 关联的 UISearchController
+ */
+@property(nonatomic, strong, readonly) UISearchController *qmui_searchController;
+
+/**
  当以 tableHeaderView 的方式使用 UISearchBar 时，建议将这个属性置为 YES，从而可以帮你处理 https://github.com/Tencent/QMUI_iOS/issues/233 里列出的问题（抖动、iPhone X 适配等），默认为 NO
  */
 @property(nonatomic, assign) BOOL qmui_usedAsTableHeaderView;
@@ -43,17 +48,28 @@ NS_ASSUME_NONNULL_BEGIN
 /// 输入框相对于系统原有布局位置的上下左右的偏移，正值表示向内缩小，负值表示向外扩大。注意输入框默认情况下就自带 (10, 8, 10, 8) 的间距，qmui_textFieldMargins 是基于这个间距的基础上做调整，换句话说，当 qmui_textFieldMargins 为 UIEdgeInsetsZero 时不代表输入框会上下左右都撑满父容器。
 @property(nonatomic, assign) UIEdgeInsets qmui_textFieldMargins UI_APPEARANCE_SELECTOR;
 
+/// 支持根据 active 的值的不同来设置不一样的输入框位置偏移，当使用这个 block 后 @c qmui_textFieldMargins 无效。
+@property(nonatomic, copy) UIEdgeInsets (^qmui_textFieldMarginsBlock)(__kindof UISearchBar *searchBar, BOOL active);
+
 /// 获取 searchBar 内部的输入框的引用，在 searchBar 初始化完即可被获取
 @property(nullable, nonatomic, weak, readonly) UITextField *qmui_textField;
 
 /// 获取 searchBar 的背景 view，为一个 UIImageView 的子类 UISearchBarBackground，在 searchBar 初始化完即可被获取
 @property(nullable, nonatomic, weak, readonly) UIView *qmui_backgroundView;
 
-/// 获取 searchBar 内的取消按钮，注意 UISearchBar 的取消按钮是在 setShowsCancelButton:animated: 被调用之后才会生成
+/// 获取 searchBar 内的取消按钮，注意 UISearchBar 的取消按钮是在需要的时候才会生成（具体时机可以看 .m 内的 +load 方法）
 @property(nullable, nonatomic, weak, readonly) UIButton *qmui_cancelButton;
 
 /// 取消按钮的字体，由于系统的 cancelButton 是懒加载的，所以当不存在 cancelButton 时该值为 nil
 @property(nullable, nonatomic, strong) UIFont *qmui_cancelButtonFont UI_APPEARANCE_SELECTOR;
+
+/// 取消按钮相对于系统原有布局位置的上下左右的偏移。
+@property(nonatomic, copy) UIEdgeInsets (^qmui_cancelButtonMarginsBlock)(__kindof UISearchBar *searchBar, BOOL active);
+
+/// 当 UISearchBar 被直接初始化后使用时（也即不存在关联的 UISearchController），cancelButton 只有在 searchBar 聚焦升起键盘时才是 enabled，键盘降下时就 disabled。通常这不是我们想要的，所以提供这个开关，允许你强制保持 cancelButton 一直为 enabled。
+/// 默认为 YES。
+/// @note 注意只有 searchBar 不存在关联的 UISearchController 时，这个属性才会生效。
+@property(nonatomic, assign) BOOL qmui_alwaysEnableCancelButton UI_APPEARANCE_SELECTOR;
 
 /// 获取 scopeBar 里的 UISegmentedControl
 @property(nullable, nonatomic, weak, readonly) UISegmentedControl *qmui_segmentedControl;

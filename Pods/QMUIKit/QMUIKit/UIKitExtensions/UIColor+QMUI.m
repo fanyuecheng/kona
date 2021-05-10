@@ -1,6 +1,6 @@
 /**
  * Tencent is pleased to support the open source community by making QMUI_iOS available.
- * Copyright (C) 2016-2020 THL A29 Limited, a Tencent company. All rights reserved.
+ * Copyright (C) 2016-2021 THL A29 Limited, a Tencent company. All rights reserved.
  * Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
  * http://opensource.org/licenses/MIT
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
@@ -227,6 +227,35 @@
     return [self isEqual:[UIColor qmui_systemTintColor]];
 }
 
+- (CGFloat)qmui_distanceBetweenColor:(UIColor *)color {
+    if (!color) return CGFLOAT_MAX;
+    
+    UIColor *color1 = self;
+    UIColor *color2 = color;
+    CGFloat R = 100.0;
+    CGFloat angle = 30.0;
+    CGFloat h = R * cos(angle / 180 * M_PI);
+    CGFloat r = R * sin(angle / 180 * M_PI);
+    
+    CGFloat hue1 = color1.qmui_hue * 360;
+    CGFloat saturation1 = color1.qmui_saturation;
+    CGFloat brightness1 = color1.qmui_brightness;
+    CGFloat hue2 = color2.qmui_hue * 360;
+    CGFloat saturation2 = color2.qmui_saturation;
+    CGFloat brightness2 = color2.qmui_brightness;
+    
+    CGFloat x1 = r * brightness1 * saturation1 * cos(hue1 / 180 * M_PI);
+    CGFloat y1 = r * brightness1 * saturation1 * sin(hue1 / 180 * M_PI);
+    CGFloat z1 = h * (1 - brightness1);
+    CGFloat x2 = r * brightness2 * saturation2 * cos(hue2 / 180 * M_PI);
+    CGFloat y2 = r * brightness2 * saturation2 * sin(hue2 / 180 * M_PI);
+    CGFloat z2 = h * (1 - brightness2);
+    CGFloat dx = x1 - x2;
+    CGFloat dy = y1 - y2;
+    CGFloat dz = z1 - z2;
+    return sqrt(dx * dx + dy * dy + dz * dz);
+}
+
 + (UIColor *)qmui_systemTintColor {
     static UIColor *systemTintColor = nil;
     if (!systemTintColor) {
@@ -291,7 +320,6 @@ NSString *const QMUICGColorOriginalColorBindKey = @"QMUICGColorOriginalColorBind
 + (void)load {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-#ifdef IOS13_SDK_ALLOWED
         if (@available(iOS 13.0, *)) {
             ExtendImplementationOfNonVoidMethodWithoutArguments([UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull trait) {
                 return [UIColor clearColor];
@@ -304,7 +332,6 @@ NSString *const QMUICGColorOriginalColorBindKey = @"QMUICGColorOriginalColorBind
                 return originReturnValue;
             });
         }
-#endif
     });
 }
 
@@ -321,14 +348,12 @@ NSString *const QMUICGColorOriginalColorBindKey = @"QMUICGColorOriginalColorBind
 
 - (UIColor *)qmui_rawColor {
     if (self.qmui_isDynamicColor) {
-#ifdef IOS13_SDK_ALLOWED
         if (@available(iOS 13.0, *)) {
             if ([self respondsToSelector:@selector(resolvedColorWithTraitCollection:)]) {
                 UIColor *color = [self resolvedColorWithTraitCollection:UITraitCollection.currentTraitCollection];
                 return color.qmui_rawColor;
             }
         }
-#endif
     }
     return self;
 }

@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		287B60ADD4A2BE0604B7599F /* libPods-kona.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CC424DA0C3A32C91229390BA /* libPods-kona.a */; };
 		713B3FA5212BB43600151BA0 /* KNPostsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 713B3FA4212BB43600151BA0 /* KNPostsController.m */; };
 		713B3FA8212BBF1C00151BA0 /* KNPostViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 713B3FA7212BBF1C00151BA0 /* KNPostViewModel.m */; };
 		713B3FB1212C130400151BA0 /* KNSettingController.m in Sources */ = {isa = PBXBuildFile; fileRef = 713B3FB0212C130400151BA0 /* KNSettingController.m */; };
@@ -23,10 +22,12 @@
 		71670976212ACC6B0002E395 /* KNNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 71670975212ACC6B0002E395 /* KNNavigationController.m */; };
 		71670979212ACF7B0002E395 /* KNModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 71670978212ACF7B0002E395 /* KNModel.m */; };
 		7167097C212AD0310002E395 /* KNPost.m in Sources */ = {isa = PBXBuildFile; fileRef = 7167097B212AD0310002E395 /* KNPost.m */; };
+		7D9A03D6F524DA7921499154 /* Pods_kona.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6328358162FF9A6ED556BF21 /* Pods_kona.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		2637563A96F8C4B4435850A0 /* Pods-kona.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kona.debug.xcconfig"; path = "Pods/Target Support Files/Pods-kona/Pods-kona.debug.xcconfig"; sourceTree = "<group>"; };
+		6328358162FF9A6ED556BF21 /* Pods_kona.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_kona.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		713B3FA3212BB43600151BA0 /* KNPostsController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KNPostsController.h; sourceTree = "<group>"; };
 		713B3FA4212BB43600151BA0 /* KNPostsController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KNPostsController.m; sourceTree = "<group>"; };
 		713B3FA6212BBF1C00151BA0 /* KNPostViewModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KNPostViewModel.h; sourceTree = "<group>"; };
@@ -60,7 +61,6 @@
 		71670978212ACF7B0002E395 /* KNModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KNModel.m; sourceTree = "<group>"; };
 		7167097A212AD0310002E395 /* KNPost.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KNPost.h; sourceTree = "<group>"; };
 		7167097B212AD0310002E395 /* KNPost.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KNPost.m; sourceTree = "<group>"; };
-		CC424DA0C3A32C91229390BA /* libPods-kona.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-kona.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E694ABBB4C5C527BFE692860 /* Pods-kona.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kona.release.xcconfig"; path = "Pods/Target Support Files/Pods-kona/Pods-kona.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -69,7 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				287B60ADD4A2BE0604B7599F /* libPods-kona.a in Frameworks */,
+				7D9A03D6F524DA7921499154 /* Pods_kona.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -249,7 +249,7 @@
 		D5D828781B60AFF00E0D0FDC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				CC424DA0C3A32C91229390BA /* libPods-kona.a */,
+				6328358162FF9A6ED556BF21 /* Pods_kona.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -265,7 +265,7 @@
 				7167093B212AC0C20002E395 /* Sources */,
 				7167093C212AC0C20002E395 /* Frameworks */,
 				7167093D212AC0C20002E395 /* Resources */,
-				A9646A899B79A439D51278AE /* [CP] Copy Pods Resources */,
+				1323DD64B8075B37EFF65B70 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -323,21 +323,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		A9646A899B79A439D51278AE /* [CP] Copy Pods Resources */ = {
+		1323DD64B8075B37EFF65B70 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-kona/Pods-kona-resources-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-kona/Pods-kona-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			name = "[CP] Copy Pods Resources";
+			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-kona/Pods-kona-resources-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-kona/Pods-kona-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-kona/Pods-kona-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-kona/Pods-kona-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		B1FA4EE48EBB87FA354222AA /* [CP] Check Pods Manifest.lock */ = {

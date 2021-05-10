@@ -1,6 +1,6 @@
 /**
  * Tencent is pleased to support the open source community by making QMUI_iOS available.
- * Copyright (C) 2016-2020 THL A29 Limited, a Tencent company. All rights reserved.
+ * Copyright (C) 2016-2021 THL A29 Limited, a Tencent company. All rights reserved.
  * Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
  * http://opensource.org/licenses/MIT
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
@@ -67,6 +67,11 @@ typedef NS_OPTIONS(NSUInteger, QMUIViewControllerVisibleState) {
 - (BOOL)qmui_isViewLoadedAndVisible;
 
 /**
+ 判断当前 viewController 是否为传入的 viewController 本身，或是其“子控制器” （childViewController）、孙子控制器（即 childViewController 的 childViewController ...）
+ */
+- (BOOL)qmui_isDescendantOfViewController:(UIViewController *)viewController;
+
+/**
  获取当前 viewController 所处的的生命周期阶段（也即 viewDidLoad/viewWillApear/viewDidAppear/viewWillDisappear/viewDidDisappear）
  */
 @property(nonatomic, assign, readonly) QMUIViewControllerVisibleState qmui_visibleState;
@@ -102,6 +107,7 @@ typedef NS_OPTIONS(NSUInteger, QMUIViewControllerVisibleState) {
 
 /// 提供一个 block 可以方便地控制状态栏样式，适用于无法重写父类方法的场景。默认不实现这个 block 则不干预样式。
 /// @note iOS 13 及以后，自己显示的 UIWindow 无法盖住状态栏了，但 iOS 12 及以前的系统，以 UIWindow 显示的浮层是可以盖住状态栏的，请知悉。
+/// @note 对于 QMUISearchController，这个 block 的返回值将会用于控制搜索状态下的状态栏样式。
 @property(nullable, nonatomic, copy) UIStatusBarStyle (^qmui_preferredStatusBarStyleBlock)(void);
 
 /// 提供一个 block 可以方便地控制状态栏动画，适用于无法重写父类方法的场景。默认不实现这个 block 则不干预动画。
