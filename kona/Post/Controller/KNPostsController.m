@@ -52,7 +52,6 @@
     [super viewDidLayoutSubviews];
     
     CGFloat navigationHeight = self.qmui_navigationBarMaxYInViewCoordinator;
-    CGFloat safeAreaBottom = SafeAreaInsetsConstantForDeviceWithNotch.bottom;
     
     [self.searchBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.view).offset(navigationHeight);
@@ -62,7 +61,7 @@
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.searchBar.mas_bottom);
         make.left.width.equalTo(self.view);
-        make.bottom.equalTo(self.view).offset(-safeAreaBottom);
+        make.bottom.equalTo(self.view);
     }];
 }
 
@@ -179,7 +178,10 @@
         _collectionView.dataSource = self.viewModel;
         _collectionView.delegate = self.viewModel;
         [_collectionView registerClass:UICollectionViewCell.class forCellWithReuseIdentifier:@"UICollectionViewCell"];
-        
+        _collectionView.contentInset = UIEdgeInsetsMake(0, 0, SafeAreaInsetsConstantForDeviceWithNotch.bottom, 0);
+        if (@available(iOS 11, *)) {
+            _collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }
         @weakify(self)
         _collectionView.mj_footer = [MJRefreshBackStateFooter footerWithRefreshingBlock:^{
             @strongify(self)

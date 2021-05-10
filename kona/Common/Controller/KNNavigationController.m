@@ -19,8 +19,8 @@
     // Do any additional setup after loading the view.
 }
 
-- (void)didInitialize {
-    [super didInitialize];
+- (void)qmui_didInitialize {
+    [super qmui_didInitialize];
     
     if (@available(iOS 13.0, *)) {
        self.modalPresentationStyle = UIModalPresentationFullScreen;
